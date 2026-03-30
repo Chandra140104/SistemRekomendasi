@@ -119,6 +119,14 @@
             <p>rekomendasi</p>
           </a>
         </li>
+        <!-- LEVEL -->
+<li class="nav-item">
+  <a href="{{ route('level.index') }}"
+     class="nav-link {{ request()->routeIs('level.*') ? 'active' : '' }}">
+    <i class="nav-icon fas fa-user-shield"></i>
+    <p>Level</p>
+  </a>
+</li>
 
 
       </ul>

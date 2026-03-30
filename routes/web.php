@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\RekomendasiController;
+use App\Http\Controllers\LevelController;
 /*
 |--------------------------------------------------------------------------
 | AUTH
@@ -45,3 +46,21 @@ Route::post('/rekomendasi', [RekomendasiController::class, 'store'])
 
 Route::get('/rekomendasi/{id}/show', [RekomendasiController::class, 'show'])
     ->name('rekomendasi.show');
+
+    /*
+|--------------------------------------------------------------------------
+| Level
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/level', [LevelController::class, 'index'])
+    ->name('level.index');
+
+Route::get('/level/{id}', [LevelController::class, 'show'])
+    ->name('level.show');
+
+Route::get('/level/{id}/edit', [LevelController::class, 'edit'])
+    ->name('level.edit');
+
+Route::put('/level/{id}', [LevelController::class, 'update'])
+    ->name('level.update');
