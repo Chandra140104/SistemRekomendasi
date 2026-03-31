@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Login | AdminLTE</title>
+  <title>Register | AdminLTE</title>
 
   <!-- Google Font -->
   <link rel="stylesheet"
@@ -16,27 +16,35 @@
 
   <!-- SweetAlert -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-  <style>
-    .swal-small {
-      font-size: 0.9rem;
-    }
-  </style>
 </head>
 
-<body class="hold-transition login-page">
-<div class="login-box">
+<body class="hold-transition register-page">
+<div class="register-box">
 
-  <div class="card card-outline card-primary">
-    <div class="card-header text-center">
-      <a href="#" class="h1"><b>Admin</b>LTE</a>
-    </div>
+  <!-- LOGO -->
+  <div class="register-logo">
+    <a href="#"><b>Admin</b>LTE</a>
+  </div>
 
-    <div class="card-body">
-      <p class="login-box-msg">Sign in to start your session</p>
+  <!-- CARD -->
+  <div class="card">
+    <div class="card-body register-card-body">
 
-      <form action="{{ route('login.process') }}" method="POST">
+      <p class="login-box-msg">Register a new membership</p>
+
+      <!-- FORM -->
+      <form action="{{ route('register.store') }}" method="POST">
         @csrf
+
+        <!-- NAME -->
+        <div class="input-group mb-3">
+          <input type="text" name="name" class="form-control" placeholder="Full name" required>
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-user"></span>
+            </div>
+          </div>
+        </div>
 
         <!-- EMAIL -->
         <div class="input-group mb-3">
@@ -58,32 +66,40 @@
           </div>
         </div>
 
-        <!-- REMEMBER ME + BUTTON -->
+        <!-- CONFIRM PASSWORD -->
+        <div class="input-group mb-3">
+          <input type="password" name="password_confirmation" class="form-control" placeholder="Retype password" required>
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TERMS -->
         <div class="row">
           <div class="col-8">
             <div class="icheck-primary">
-              <input type="checkbox" id="remember">
-              <label for="remember">
-                Remember Me
+              <input type="checkbox" id="agreeTerms" required>
+              <label for="agreeTerms">
+                I agree to the <a href="#">terms</a>
               </label>
             </div>
           </div>
 
           <div class="col-4">
             <button type="submit" class="btn btn-primary btn-block">
-              Sign In
+              Register
             </button>
           </div>
         </div>
 
       </form>
 
-      <!-- ❌ SOCIAL LOGIN DIHAPUS -->
-
-      <!-- OPTIONAL -->
-      <a href="{{ route('password.request') }}">I forgot my password</a><br>
-
-      <a href="{{ route('register') }}"> Register a new membership</a>
+      <!-- LINK LOGIN -->
+      <a href="{{ route('login') }}" class="text-center">
+        I already have a membership
+      </a>
 
     </div>
   </div>
@@ -96,46 +112,34 @@
 <script src="{{ asset('adminlte/dist/js/adminlte.min.js') }}"></script>
 
 {{-- ================= SWEET ALERT ================= --}}
-
-{{-- LOGIN GAGAL --}}
-@if(session('error'))
-<script>
-Swal.fire({
-  icon: 'error',
-  title: 'Login Gagal',
-  text: '{{ session('error') }}',
-  width: '20rem',
-  confirmButtonText: 'OK',
-  customClass: {
-    popup: 'swal-small'
-  }
-});
-</script>
-@endif
-
-{{-- LOGIN BERHASIL --}}
-@if(session('login_success'))
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-  Swal.fire({
-    icon: 'success',
-    title: 'Login Berhasil',
-    text: 'Selamat Datang',
-    width: '20rem',
-    showConfirmButton: false,
-    timer: 3000,
-    timerProgressBar: true,
-    allowOutsideClick: false,
-    allowEscapeKey: false,
-    customClass: {
-      popup: 'swal-small'
-    }
-  }).then(() => {
-    window.location.href = "{{ route('dashboard') }}";
-  });
+
+    // REGISTER BERHASIL
+    @if(session('register_success'))
+    Swal.fire({
+        icon: 'success',
+        title: 'Register Berhasil',
+        text: 'Mengalihkan ke halaman login...',
+        timer: 2000,
+        showConfirmButton: false,
+        timerProgressBar: true
+    }).then(() => {
+        window.location.href = "{{ route('login') }}";
+    });
+    @endif
+
+    // VALIDASI ERROR
+    @if ($errors->any())
+    Swal.fire({
+        icon: 'error',
+        title: 'Gagal',
+        text: '{{ $errors->first() }}'
+    });
+    @endif
+
 });
 </script>
-@endif
 
 </body>
 </html>

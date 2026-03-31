@@ -23,6 +23,34 @@ Route::post('/login', [AuthController::class, 'login'])
 Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout');
 
+    Route::get('/forgot-password', function () {
+    return view('login.forgot-password');
+})->name('password.request');
+
+// 🔥 tampil halaman register
+Route::get('/register', function () {
+    return view('login.register');
+})->name('register');
+
+// 🔥 proses register
+Route::post('/register', function (\Illuminate\Http\Request $request) {
+
+    $request->validate([
+        'name' => 'required|max:50',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|confirmed|min:3'
+    ]);
+
+    \App\Models\User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => $request->password,
+        'id_level' => 2
+    ]);
+
+    return back()->with('register_success', true);
+
+})->name('register.store');
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +64,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard.admin');
     })->name('dashboard');
+    
+
 
     // Produk
     Route::resource('produk', ProdukController::class);
