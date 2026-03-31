@@ -15,15 +15,14 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
-    $request->session()->regenerate();
+            $request->session()->regenerate();
 
-    // tetap render login page
-    return back()->with('login_success', true);
-}
+            // 🔥 FIX: redirect ke dashboard
+            return redirect()->route('dashboard');
+        }
 
-return back()->with('error', 'Email atau password salah');
+        return back()->with('error', 'Email atau password salah');
     }
-
 
     public function logout(Request $request)
     {

@@ -128,7 +128,14 @@
   </a>
 </li>
 
-
+<!-- PENGGUNA -->
+<li class="nav-item">
+  <a href="{{ route('user.index') }}"
+     class="nav-link {{ request()->routeIs('user.*') ? 'active' : '' }}">
+    <i class="nav-icon fas fa-users"></i>
+    <p>Pengguna</p>
+  </a>
+</li>
       </ul>
     </nav>
   </div>
