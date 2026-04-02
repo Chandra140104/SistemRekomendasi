@@ -4,106 +4,136 @@
   <meta charset="utf-8">
   <title>Produk | AdminLTE</title>
 
-  <!-- Font Awesome -->
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/fontawesome-free/css/all.min.css') }}">
-  <!-- DataTables -->
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
-  <!-- AdminLTE -->
   <link rel="stylesheet" href="{{ asset('adminlte/dist/css/adminlte.min.css') }}">
-  <!-- SweetAlert2 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
 
-  @include('layouts.sidebar')
+@include('layouts.sidebar')
 
-  <div class="content-wrapper">
+<div class="content-wrapper">
 
-    <section class="content-header">
-      <div class="container-fluid">
-        <h1>Data Produk</h1>
-      </div>
-    </section>
+<section class="content-header">
+  <div class="container-fluid">
+    <h1>Data Produk</h1>
+  </div>
+</section>
 
-    <section class="content">
-      <div class="container-fluid">
+<section class="content">
+<div class="container-fluid">
 
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Daftar Produk Foxapaint</h3>
-          </div>
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">Daftar Produk Foxapaint</h3>
+  </div>
 
-          <div class="card-body">
-            <table id="example1" class="table table-bordered table-hover">
-              <thead>
-                <tr>
-                  <th width="50">No</th>
-                  <th>Nama Produk</th>
-                  <th>Kategori</th>
-                  <th>Aplikasi</th>
-                  <th width="160" class="text-center">Aksi</th>
-                </tr>
-              </thead>
+  <div class="card-body">
 
-              <tbody>
-                @foreach($produk as $p)
-                <tr>
-                  <td>{{ $loop->iteration }}</td>
-                  <td>{{ $p->nama }}</td>
+    <!-- 🔥 FILTER -->
+    <form method="GET" action="{{ route('produk.index') }}" class="mb-3">
+      <div class="row">
 
-                  <!-- 🔥 FIX RELASI -->
-                  <td>{{ $p->kategori->nama ?? '-' }}</td>
+        <!-- Dropdown -->
+        <div class="col-md-4">
+          <select name="id_kategori" class="form-control">
+            <option value="">-- Semua Kategori --</option>
 
-                  <td>{{ $p->lokasi_penggunaan }}</td>
+            @foreach($kategori as $k)
+              <option value="{{ $k->id_kategori }}"
+                {{ request('id_kategori') == $k->id_kategori ? 'selected' : '' }}>
+                {{ $k->nama }}
+              </option>
+            @endforeach
+          </select>
+        </div>
 
-                  <td class="text-center">
+        <!-- Tombol sejajar -->
+        <div class="col-md-4 d-flex align-items-center">
 
-                    <!-- SHOW -->
-                    <button
-                      class="btn btn-info btn-sm"
-                      data-toggle="modal"
-                      data-target="#modalShow"
-                      data-url="{{ route('produk.show', $p->id_produk) }}">
-                      <i class="fas fa-eye"></i>
-                    </button>
+          <button type="submit" class="btn btn-primary mr-2">
+            <i class="fas fa-filter"></i> Filter
+          </button>
 
-                    <!-- EDIT -->
-                    <a href="{{ route('produk.edit', $p->id_produk) }}"
-                       class="btn btn-warning btn-sm">
-                      <i class="fas fa-edit"></i>
-                    </a>
+          <a href="{{ route('produk.index') }}" class="btn btn-secondary">
+            Reset
+          </a>
 
-                    <!-- DELETE -->
-                    <form action="{{ route('produk.destroy', $p->id_produk) }}"
-                          method="POST"
-                          class="d-inline delete-form">
-                      @csrf
-                      @method('DELETE')
-                      <button type="button"
-                              class="btn btn-danger btn-sm btn-delete">
-                        <i class="fas fa-trash"></i>
-                      </button>
-                    </form>
-
-                  </td>
-                </tr>
-                @endforeach
-              </tbody>
-
-            </table>
-          </div>
         </div>
 
       </div>
-    </section>
-  </div>
+    </form>
 
-  <footer class="main-footer">
-    <strong>Foxapaint &copy; 2026</strong>
-  </footer>
+    <!-- TABLE -->
+    <table id="example1" class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Nama Produk</th>
+          <th>Kategori</th>
+          <th>Aplikasi</th>
+          <th class="text-center">Aksi</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @foreach($produk as $p)
+        <tr>
+          <td>{{ $loop->iteration }}</td>
+          <td>{{ $p->nama }}</td>
+
+          <!-- 🔥 RELASI -->
+          <td>{{ $p->kategori->nama ?? '-' }}</td>
+
+          <td>{{ $p->lokasi_penggunaan }}</td>
+
+          <td class="text-center">
+
+            <!-- SHOW -->
+            <button class="btn btn-info btn-sm"
+              data-toggle="modal"
+              data-target="#modalShow"
+              data-url="{{ route('produk.show', $p->id_produk) }}">
+              <i class="fas fa-eye"></i>
+            </button>
+
+            <!-- EDIT -->
+            <a href="{{ route('produk.edit', $p->id_produk) }}"
+               class="btn btn-warning btn-sm">
+              <i class="fas fa-edit"></i>
+            </a>
+
+            <!-- DELETE -->
+            <form action="{{ route('produk.destroy', $p->id_produk) }}"
+              method="POST"
+              class="d-inline">
+              @csrf
+              @method('DELETE')
+              <button type="button" class="btn btn-danger btn-sm btn-delete">
+                <i class="fas fa-trash"></i>
+              </button>
+            </form>
+
+          </td>
+        </tr>
+        @endforeach
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+</div>
+</section>
+</div>
+
+<footer class="main-footer">
+  <strong>Foxapaint &copy; 2026</strong>
+</footer>
 </div>
 
 <!-- MODAL -->
@@ -126,42 +156,27 @@
 
 <script>
 $(function () {
-  $('#example1').DataTable({
-    responsive: true,
-    autoWidth: false,
-    dom:
-      "<'row mb-2'<'col-sm-6'l><'col-sm-6 d-flex justify-content-end'f>>" +
-      "<'row'<'col-sm-12'tr>>" +
-      "<'row mt-2'<'col-sm-5'i><'col-sm-7'p>>"
-  });
-
-  $('.dataTables_filter').append(`
-    <a href="{{ route('produk.create') }}"
-       class="btn btn-primary btn-sm ml-2">
-      <i class="fas fa-plus"></i> Tambah Produk
-    </a>
-  `);
+  $('#example1').DataTable();
 });
 
-// modal
-$('#modalShow').on('show.bs.modal', function (e) {
-  let url = $(e.relatedTarget).data('url');
-  $('#modalContent').load(url);
-});
-
-// delete
+// delete confirm
 $(document).on('click', '.btn-delete', function () {
   let form = $(this).closest('form');
 
   Swal.fire({
     title: 'Yakin hapus?',
-    text: 'Data produk akan dihapus permanen!',
     icon: 'warning',
     showCancelButton: true,
     confirmButtonText: 'Ya!'
   }).then((result) => {
     if (result.isConfirmed) form.submit();
   });
+});
+
+// modal
+$('#modalShow').on('show.bs.modal', function (e) {
+  let url = $(e.relatedTarget).data('url');
+  $('#modalContent').load(url);
 });
 </script>
 

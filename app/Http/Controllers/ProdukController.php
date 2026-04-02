@@ -8,13 +8,22 @@ use Illuminate\Http\Request;
 
 class ProdukController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $produk = Produk::with('kategori')
-            ->orderBy('id_produk', 'desc')
-            ->get();
+        // ambil semua kategori untuk dropdown
+        $kategori = Kategori::all();
 
-        return view('produk.index', compact('produk'));
+        // query produk + relasi
+        $query = Produk::with('kategori');
+
+        // 🔥 FILTER KATEGORI
+        if ($request->id_kategori) {
+            $query->where('id_kategori', $request->id_kategori);
+        }
+
+        $produk = $query->orderBy('id_produk', 'desc')->get();
+
+        return view('produk.index', compact('produk', 'kategori'));
     }
 
     public function create()
@@ -26,7 +35,7 @@ class ProdukController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'produk' => 'required|string|max:100', // 🔥 FIX
+            'nama' => 'required|string|max:100',
             'kode' => 'required|string|max:50',
             'id_kategori' => 'required|exists:kategori,id_kategori',
             'sub_kategori' => 'required|string|max:50',
@@ -36,7 +45,7 @@ class ProdukController extends Controller
         ]);
 
         Produk::create([
-            'produk' => $validated['produk'], // 🔥 FIX
+            'nama' => $validated['nama'],
             'kode' => $validated['kode'],
             'id_kategori' => $validated['id_kategori'],
             'sub_kategori' => $validated['sub_kategori'],
@@ -45,8 +54,7 @@ class ProdukController extends Controller
             'fungsi' => $validated['fungsi'],
         ]);
 
-        return redirect()
-            ->route('produk.index')
+        return redirect()->route('produk.index')
             ->with('success', 'Produk berhasil ditambahkan');
     }
 
@@ -59,7 +67,6 @@ class ProdukController extends Controller
     public function edit(Produk $produk)
     {
         $kategori = Kategori::all();
-
         $produk->lokasi_penggunaan = explode(',', $produk->lokasi_penggunaan);
 
         return view('produk.edit', compact('produk', 'kategori'));
@@ -68,7 +75,7 @@ class ProdukController extends Controller
     public function update(Request $request, Produk $produk)
     {
         $validated = $request->validate([
-            'produk' => 'required|string|max:100', // 🔥 FIX
+            'nama' => 'required|string|max:100',
             'kode' => 'required|string|max:50',
             'id_kategori' => 'required|exists:kategori,id_kategori',
             'sub_kategori' => 'required|string|max:50',
@@ -78,7 +85,7 @@ class ProdukController extends Controller
         ]);
 
         $produk->update([
-            'produk' => $validated['produk'], // 🔥 FIX
+            'nama' => $validated['nama'],
             'kode' => $validated['kode'],
             'id_kategori' => $validated['id_kategori'],
             'sub_kategori' => $validated['sub_kategori'],
@@ -87,8 +94,7 @@ class ProdukController extends Controller
             'fungsi' => $validated['fungsi'],
         ]);
 
-        return redirect()
-            ->route('produk.index')
+        return redirect()->route('produk.index')
             ->with('success', 'Produk berhasil diperbarui');
     }
 
@@ -96,8 +102,7 @@ class ProdukController extends Controller
     {
         $produk->delete();
 
-        return redirect()
-            ->route('produk.index')
+        return redirect()->route('produk.index')
             ->with('success', 'Produk berhasil dihapus');
     }
 }
