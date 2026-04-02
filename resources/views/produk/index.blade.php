@@ -53,7 +53,10 @@
                 <tr>
                   <td>{{ $loop->iteration }}</td>
                   <td>{{ $p->nama }}</td>
-                  <td>{{ $p->kategori }}</td>
+
+                  <!-- 🔥 FIX RELASI -->
+                  <td>{{ $p->kategori->nama ?? '-' }}</td>
+
                   <td>{{ $p->lokasi_penggunaan }}</td>
 
                   <td class="text-center">
@@ -67,7 +70,7 @@
                       <i class="fas fa-eye"></i>
                     </button>
 
-                    <!-- EDIT (✅ DITAMBAHKAN & DIPERBAIKI) -->
+                    <!-- EDIT -->
                     <a href="{{ route('produk.edit', $p->id_produk) }}"
                        class="btn btn-warning btn-sm">
                       <i class="fas fa-edit"></i>
@@ -103,7 +106,7 @@
   </footer>
 </div>
 
-<!-- MODAL SHOW -->
+<!-- MODAL -->
 <div class="modal fade" id="modalShow">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -112,7 +115,7 @@
   </div>
 </div>
 
-<!-- Scripts -->
+<!-- JS -->
 <script src="{{ asset('adminlte/plugins/jquery/jquery.min.js') }}"></script>
 <script src="{{ asset('adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('adminlte/plugins/datatables/jquery.dataTables.min.js') }}"></script>
@@ -121,7 +124,6 @@
 <script src="{{ asset('adminlte/dist/js/adminlte.min.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<!-- DataTable Init + Tombol Create -->
 <script>
 $(function () {
   $('#example1').DataTable({
@@ -133,7 +135,6 @@ $(function () {
       "<'row mt-2'<'col-sm-5'i><'col-sm-7'p>>"
   });
 
-  // Tambah tombol Create di sebelah Search
   $('.dataTables_filter').append(`
     <a href="{{ route('produk.create') }}"
        class="btn btn-primary btn-sm ml-2">
@@ -141,18 +142,14 @@ $(function () {
     </a>
   `);
 });
-</script>
 
-<!-- Modal Show -->
-<script>
+// modal
 $('#modalShow').on('show.bs.modal', function (e) {
   let url = $(e.relatedTarget).data('url');
   $('#modalContent').load(url);
 });
-</script>
 
-<!-- SweetAlert Delete -->
-<script>
+// delete
 $(document).on('click', '.btn-delete', function () {
   let form = $(this).closest('form');
 
@@ -161,19 +158,13 @@ $(document).on('click', '.btn-delete', function () {
     text: 'Data produk akan dihapus permanen!',
     icon: 'warning',
     showCancelButton: true,
-    confirmButtonColor: '#d33',
-    cancelButtonColor: '#3085d6',
-    confirmButtonText: 'Ya, hapus!',
-    cancelButtonText: 'Batal'
+    confirmButtonText: 'Ya!'
   }).then((result) => {
-    if (result.isConfirmed) {
-      form.submit();
-    }
+    if (result.isConfirmed) form.submit();
   });
 });
 </script>
 
-<!-- SweetAlert Success -->
 @if(session('success'))
 <script>
 Swal.fire({
