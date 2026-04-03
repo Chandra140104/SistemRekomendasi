@@ -28,19 +28,22 @@
 <div class="container-fluid">
 
 <div class="card">
+
   <div class="card-header">
     <h3 class="card-title">Daftar Produk Foxapaint</h3>
   </div>
 
   <div class="card-body">
 
-    <!-- 🔥 FILTER -->
+    <!-- 🔥 FILTER + BUTTON DALAM 1 BARIS -->
     <form method="GET" action="{{ route('produk.index') }}" class="mb-3">
-      <div class="row">
+      <div class="row align-items-center">
 
-        <!-- Dropdown -->
-        <div class="col-md-4">
-          <select name="id_kategori" class="form-control">
+        <!-- KIRI -->
+        <div class="col-md-8 d-flex">
+
+          <!-- Dropdown -->
+          <select name="id_kategori" class="form-control mr-2" style="max-width:200px;">
             <option value="">-- Semua Kategori --</option>
 
             @foreach($kategori as $k)
@@ -50,19 +53,24 @@
               </option>
             @endforeach
           </select>
-        </div>
 
-        <!-- Tombol sejajar -->
-        <div class="col-md-4 d-flex align-items-center">
-
+          <!-- Filter -->
           <button type="submit" class="btn btn-primary mr-2">
             <i class="fas fa-filter"></i> Filter
           </button>
 
+          <!-- Reset -->
           <a href="{{ route('produk.index') }}" class="btn btn-secondary">
             Reset
           </a>
 
+        </div>
+
+        <!-- KANAN -->
+        <div class="col-md-4 text-right">
+          <a href="{{ route('produk.create') }}" class="btn btn-success">
+            <i class="fas fa-plus"></i> Tambah Produk
+          </a>
         </div>
 
       </div>
@@ -85,10 +93,7 @@
         <tr>
           <td>{{ $loop->iteration }}</td>
           <td>{{ $p->nama }}</td>
-
-          <!-- 🔥 RELASI -->
           <td>{{ $p->kategori->nama ?? '-' }}</td>
-
           <td>{{ $p->lokasi_penggunaan }}</td>
 
           <td class="text-center">
