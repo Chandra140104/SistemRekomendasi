@@ -119,6 +119,16 @@
             <p>rekomendasi</p>
           </a>
         </li>
+
+        <!-- KATEGORI -->
+<li class="nav-item">
+  <a href="{{ route('kategori.index') }}"
+     class="nav-link {{ request()->routeIs('kategori.*') ? 'active' : '' }}">
+    <i class="nav-icon fas fa-tags"></i>
+    <p>Kategori</p>
+  </a>
+</li>
+
         <!-- LEVEL -->
 <li class="nav-item">
   <a href="{{ route('level.index') }}"

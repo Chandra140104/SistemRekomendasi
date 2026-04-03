@@ -1,11 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\RekomendasiController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\KategoriController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,27 +16,31 @@ use App\Http\Controllers\UserController;
 |--------------------------------------------------------------------------
 */
 
+// Login page
 Route::get('/', function () {
     return view('login.login');
 })->name('login');
 
+// Proses login
 Route::post('/login', [AuthController::class, 'login'])
     ->name('login.process');
 
+// Logout
 Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout');
 
-    Route::get('/forgot-password', function () {
+// Forgot password
+Route::get('/forgot-password', function () {
     return view('login.forgot-password');
 })->name('password.request');
 
-// 🔥 tampil halaman register
+// Register page
 Route::get('/register', function () {
     return view('login.register');
 })->name('register');
 
-// 🔥 proses register
-Route::post('/register', function (\Illuminate\Http\Request $request) {
+// Proses register
+Route::post('/register', function (Request $request) {
 
     $request->validate([
         'name' => 'required|max:50',
@@ -52,6 +59,7 @@ Route::post('/register', function (\Illuminate\Http\Request $request) {
 
 })->name('register.store');
 
+
 /*
 |--------------------------------------------------------------------------
 | SEMUA HARUS LOGIN
@@ -60,17 +68,37 @@ Route::post('/register', function (\Illuminate\Http\Request $request) {
 
 Route::middleware('auth')->group(function () {
 
-    // Dashboard
+    /*
+    |--------------------------------------------------------------------------
+    | Dashboard
+    |--------------------------------------------------------------------------
+    */
     Route::get('/dashboard', function () {
         return view('dashboard.admin');
     })->name('dashboard');
-    
 
 
-    // Produk
+    /*
+    |--------------------------------------------------------------------------
+    | PRODUK
+    |--------------------------------------------------------------------------
+    */
     Route::resource('produk', ProdukController::class);
 
-    // Rekomendasi
+
+    /*
+    |--------------------------------------------------------------------------
+    | KATEGORI 🔥 (BARU)
+    |--------------------------------------------------------------------------
+    */
+    Route::resource('kategori', KategoriController::class);
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | REKOMENDASI
+    |--------------------------------------------------------------------------
+    */
     Route::get('/rekomendasi', [RekomendasiController::class, 'index'])
         ->name('rekomendasi.index');
 
@@ -80,13 +108,23 @@ Route::middleware('auth')->group(function () {
     Route::get('/rekomendasi/{id}/show', [RekomendasiController::class, 'show'])
         ->name('rekomendasi.show');
 
-    // Level
+
+    /*
+    |--------------------------------------------------------------------------
+    | LEVEL
+    |--------------------------------------------------------------------------
+    */
     Route::get('/level', [LevelController::class, 'index'])->name('level.index');
     Route::get('/level/{id}', [LevelController::class, 'show'])->name('level.show');
     Route::get('/level/{id}/edit', [LevelController::class, 'edit'])->name('level.edit');
     Route::put('/level/{id}', [LevelController::class, 'update'])->name('level.update');
 
-    // User
+
+    /*
+    |--------------------------------------------------------------------------
+    | USER
+    |--------------------------------------------------------------------------
+    */
     Route::get('/user', [UserController::class, 'index'])->name('user.index');
     Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
     Route::post('/user', [UserController::class, 'store'])->name('user.store');
