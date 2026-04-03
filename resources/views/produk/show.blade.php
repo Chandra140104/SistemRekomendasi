@@ -7,34 +7,49 @@
 
   <div class="card-body p-0">
     <table class="table table-bordered table-striped mb-0">
+
+      <!-- Nama -->
       <tr>
         <th width="35%">Nama Produk</th>
         <td>{{ $produk->nama }}</td>
       </tr>
-      <tr>
-        <th>Kode</th>
-        <td>{{ $produk->kode }}</td>
-      </tr>
+
+      <!-- Kategori -->
       <tr>
         <th>Kategori</th>
-        <td>{{ $produk->kategori }}</td>
+        <td>{{ $produk->kategori->nama ?? '-' }}</td>
       </tr>
+
+      <!-- Sub Kategori -->
       <tr>
         <th>Sub Kategori</th>
-        <td>{{ $produk->sub_kategori }}</td>
+        <td>
+          @foreach(explode(',', $produk->sub_kategori) as $sub)
+            <span class="badge badge-primary">{{ $sub }}</span>
+          @endforeach
+        </td>
       </tr>
-      <tr>
-        <th>Base</th>
-        <td>{{ $produk->base }}</td>
-      </tr>
+
+      <!-- Lokasi -->
       <tr>
         <th>Aplikasi</th>
-        <td>{{ $produk->lokasi_penggunaan }}</td>
+        <td>
+          @foreach(explode(',', $produk->lokasi_penggunaan) as $lokasi)
+            <span class="badge badge-info">{{ $lokasi }}</span>
+          @endforeach
+        </td>
       </tr>
+
+      <!-- Kelebihan -->
       <tr>
-        <th>Fungsi</th>
-        <td>{{ $produk->fungsi }}</td>
+        <th>Kelebihan</th>
+        <td>
+          @foreach(explode(',', $produk->kelebihan) as $k)
+            <span class="badge badge-success">{{ $k }}</span>
+          @endforeach
+        </td>
       </tr>
+
     </table>
   </div>
 
