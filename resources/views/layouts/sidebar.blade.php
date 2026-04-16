@@ -94,59 +94,66 @@
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview">
 
-        <!-- DASHBOARD -->
-        <li class="nav-item">
-          <a href="{{ route('dashboard') }}"
-             class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-            <i class="nav-icon fas fa-tachometer-alt"></i>
-            <p>Dashboard</p>
-          </a>
-        </li>
+  <!-- DASHBOARD (SEMUA ROLE) -->
+  <li class="nav-item">
+    <a href="{{ route('dashboard') }}"
+       class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+      <i class="nav-icon fas fa-tachometer-alt"></i>
+      <p>Dashboard</p>
+    </a>
+  </li>
 
-        <!-- PRODUK -->
-        <li class="nav-item">
-          <a href="{{ route('produk.index') }}"
-             class="nav-link {{ request()->routeIs('produk.*') ? 'active' : '' }}">
-            <i class="nav-icon fas fa-box"></i>
-            <p>Produk</p>
-          </a>
-        </li>
-        <!-- rekomendasi -->
-        <li class="nav-item">
-          <a href="{{ route('rekomendasi.index') }}"
-             class="nav-link {{ request()->routeIs('rekomendasi.*') ? 'active' : '' }}">
-            <i class="nav-icon fas fa-box"></i>
-            <p>rekomendasi</p>
-          </a>
-        </li>
+  <!-- ================= ADMIN ONLY ================= -->
+  @if(Auth::check() && Auth::user()->level->kode == 'ADM')
 
-        <!-- KATEGORI -->
-<li class="nav-item">
-  <a href="{{ route('kategori.index') }}"
-     class="nav-link {{ request()->routeIs('kategori.*') ? 'active' : '' }}">
-    <i class="nav-icon fas fa-tags"></i>
-    <p>Kategori</p>
-  </a>
-</li>
+  <!-- PRODUK -->
+  <li class="nav-item">
+    <a href="{{ route('produk.index') }}"
+       class="nav-link {{ request()->routeIs('produk.*') ? 'active' : '' }}">
+      <i class="nav-icon fas fa-box"></i>
+      <p>Produk</p>
+    </a>
+  </li>
 
-        <!-- LEVEL -->
-<li class="nav-item">
-  <a href="{{ route('level.index') }}"
-     class="nav-link {{ request()->routeIs('level.*') ? 'active' : '' }}">
-    <i class="nav-icon fas fa-user-shield"></i>
-    <p>Level</p>
-  </a>
-</li>
+  <!-- REKOMENDASI -->
+  <li class="nav-item">
+    <a href="{{ route('rekomendasi.index') }}"
+       class="nav-link {{ request()->routeIs('rekomendasi.*') ? 'active' : '' }}">
+      <i class="nav-icon fas fa-star"></i>
+      <p>Rekomendasi</p>
+    </a>
+  </li>
 
-<!-- PENGGUNA -->
-<li class="nav-item">
-  <a href="{{ route('user.index') }}"
-     class="nav-link {{ request()->routeIs('user.*') ? 'active' : '' }}">
-    <i class="nav-icon fas fa-users"></i>
-    <p>Pengguna</p>
-  </a>
-</li>
-      </ul>
+  <!-- KATEGORI -->
+  <li class="nav-item">
+    <a href="{{ route('kategori.index') }}"
+       class="nav-link {{ request()->routeIs('kategori.*') ? 'active' : '' }}">
+      <i class="nav-icon fas fa-tags"></i>
+      <p>Kategori</p>
+    </a>
+  </li>
+
+  <!-- LEVEL -->
+  <li class="nav-item">
+    <a href="{{ route('level.index') }}"
+       class="nav-link {{ request()->routeIs('level.*') ? 'active' : '' }}">
+      <i class="nav-icon fas fa-user-shield"></i>
+      <p>Level</p>
+    </a>
+  </li>
+
+  <!-- PENGGUNA -->
+  <li class="nav-item">
+    <a href="{{ route('user.index') }}"
+       class="nav-link {{ request()->routeIs('user.*') ? 'active' : '' }}">
+      <i class="nav-icon fas fa-users"></i>
+      <p>Pengguna</p>
+    </a>
+  </li>
+
+  @endif
+
+</ul>
     </nav>
   </div>
 </aside>

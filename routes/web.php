@@ -1,14 +1,15 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\LevelController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\RekomendasiController;
-use App\Http\Controllers\LevelController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\KategoriController;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,7 +52,7 @@ Route::post('/register', function (Request $request) {
     \App\Models\User::create([
         'name' => $request->name,
         'email' => $request->email,
-        'password' => $request->password,
+        'password' => Hash::make($request->password),
         'id_level' => 2
     ]);
 
@@ -74,9 +75,17 @@ Route::middleware('auth')->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::get('/dashboard', function () {
-        return view('dashboard.admin');
-    })->name('dashboard');
 
+    if (Auth::user()->level->kode == 'ADM') {
+        return view('dashboard.admin');
+    } else {
+        return view('dashboard.user');
+    }
+
+})->name('dashboard');
+
+
+    Route::middleware('role:ADM')->group(function () {
 
     /*
     |--------------------------------------------------------------------------
@@ -86,12 +95,13 @@ Route::middleware('auth')->group(function () {
     Route::resource('produk', ProdukController::class);
 
 
+    Route::resource('kategori', KategoriController::class);
+
     /*
     |--------------------------------------------------------------------------
     | KATEGORI 🔥 (BARU)
     |--------------------------------------------------------------------------
     */
-    Route::resource('kategori', KategoriController::class);
 
 
     /*
@@ -99,6 +109,8 @@ Route::middleware('auth')->group(function () {
     | REKOMENDASI
     |--------------------------------------------------------------------------
     */
+    });
+
     Route::get('/rekomendasi', [RekomendasiController::class, 'index'])
         ->name('rekomendasi.index');
 
@@ -114,6 +126,8 @@ Route::middleware('auth')->group(function () {
     | LEVEL
     |--------------------------------------------------------------------------
     */
+    Route::middleware('role:ADM')->group(function () {
+
     Route::get('/level', [LevelController::class, 'index'])->name('level.index');
     Route::get('/level/{id}', [LevelController::class, 'show'])->name('level.show');
     Route::get('/level/{id}/edit', [LevelController::class, 'edit'])->name('level.edit');
@@ -132,5 +146,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
     Route::put('/user/{id}', [UserController::class, 'update'])->name('user.update');
     Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
+
+    });
 
 });
