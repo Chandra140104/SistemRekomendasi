@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Level;
 
@@ -46,6 +47,13 @@ class UserController extends Controller
     {
         $user = User::with('level')->findOrFail($id);
         return view('pengguna.show', compact('user'));
+    }
+
+    public function profile()
+    {
+        $user = User::with('level')->findOrFail(Auth::id());
+
+        return view('profile.index', compact('user'));
     }
 
     public function edit($id)

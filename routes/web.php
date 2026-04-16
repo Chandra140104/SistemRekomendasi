@@ -84,6 +84,9 @@ Route::middleware('auth')->group(function () {
 
 })->name('dashboard');
 
+    Route::get('/profile', [UserController::class, 'profile'])
+        ->name('profile.index');
+
 
     Route::middleware('role:ADM')->group(function () {
 

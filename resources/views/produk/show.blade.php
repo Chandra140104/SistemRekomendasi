@@ -32,7 +32,7 @@
 
       <!-- Lokasi -->
       <tr>
-        <th>Aplikasi</th>
+        <th>Lokasi Penggunaan</th>
         <td>
           @foreach(explode(',', $produk->lokasi_penggunaan) as $lokasi)
             <span class="badge badge-info">{{ $lokasi }}</span>

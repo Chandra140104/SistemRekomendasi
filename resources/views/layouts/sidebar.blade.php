@@ -60,6 +60,12 @@
 
         <div class="dropdown-divider"></div>
 
+        <a href="{{ route('profile.index') }}" class="dropdown-item">
+          <i class="fas fa-user mr-2"></i> Profile
+        </a>
+
+        <div class="dropdown-divider"></div>
+
         <form action="{{ route('logout') }}" method="POST" class="dropdown-item p-0">
           @csrf
           <button type="submit" class="btn btn-link btn-block text-left">
@@ -115,15 +121,6 @@
     </a>
   </li>
 
-  <!-- REKOMENDASI -->
-  <li class="nav-item">
-    <a href="{{ route('rekomendasi.index') }}"
-       class="nav-link {{ request()->routeIs('rekomendasi.*') ? 'active' : '' }}">
-      <i class="nav-icon fas fa-star"></i>
-      <p>Rekomendasi</p>
-    </a>
-  </li>
-
   <!-- KATEGORI -->
   <li class="nav-item">
     <a href="{{ route('kategori.index') }}"
@@ -152,6 +149,14 @@
   </li>
 
   @endif
+
+  <li class="nav-item mt-3">
+    <a href="{{ route('profile.index') }}"
+       class="nav-link {{ request()->routeIs('profile.*') ? 'active' : '' }}">
+      <i class="nav-icon fas fa-user-circle"></i>
+      <p>Profile</p>
+    </a>
+  </li>
 
 </ul>
     </nav>

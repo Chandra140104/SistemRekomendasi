@@ -83,7 +83,7 @@
           <th>No</th>
           <th>Nama Produk</th>
           <th>Kategori</th>
-          <th>Aplikasi</th>
+          <th>Lokasi Penggunaan</th>
           <th class="text-center">Aksi</th>
         </tr>
       </thead>

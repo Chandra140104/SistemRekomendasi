@@ -80,7 +80,7 @@
               </div>
 
               <div class="form-group">
-                <label>Aplikasi (Bisa lebih dari satu)</label>
+                <label>Lokasi Penggunaan (Bisa lebih dari satu)</label>
                 <div class="row">
                   @php
                     $lokasi = [
