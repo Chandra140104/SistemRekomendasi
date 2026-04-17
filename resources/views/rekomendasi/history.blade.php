@@ -55,7 +55,7 @@
               <tbody>
                 @foreach($riwayatList as $riwayat)
                 <tr>
-                  <td>{{ $loop->iteration }}</td>
+                  <td>{{ $riwayatList->firstItem() + $loop->index }}</td>
                   <td>{{ $riwayat->kategori }}</td>
                   <td>{{ $riwayat->sub_kategori }}</td>
                   <td>{{ $riwayat->lokasi_penggunaan }}</td>
@@ -70,6 +70,14 @@
                 @endforeach
               </tbody>
             </table>
+          </div>
+          <div class="d-flex flex-wrap justify-content-between align-items-center mt-3">
+            <div class="text-muted">
+              Showing {{ $riwayatList->firstItem() }} to {{ $riwayatList->lastItem() }} of {{ $riwayatList->total() }} entries
+            </div>
+            <div>
+              {{ $riwayatList->links('pagination::bootstrap-4') }}
+            </div>
           </div>
           @else
           <div class="alert alert-info mb-0">

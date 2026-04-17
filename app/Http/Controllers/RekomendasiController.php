@@ -72,7 +72,7 @@ class RekomendasiController extends Controller
     {
         $riwayatList = InputRekomendasi::where('id_user', Auth::id())
             ->orderByDesc('created_at')
-            ->get();
+            ->paginate(10);
 
         return view('rekomendasi.history', compact('riwayatList'));
     }

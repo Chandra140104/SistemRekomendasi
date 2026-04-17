@@ -87,6 +87,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [UserController::class, 'profile'])
         ->name('profile.index');
 
+    Route::get('/katalog', [ProdukController::class, 'catalog'])
+        ->name('katalog.index');
+
 
     Route::middleware('role:ADM')->group(function () {
 

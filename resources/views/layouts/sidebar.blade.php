@@ -121,6 +121,14 @@
     </a>
   </li>
 
+  <li class="nav-item">
+    <a href="{{ route('katalog.index') }}"
+       class="nav-link {{ request()->routeIs('katalog.*') ? 'active' : '' }}">
+      <i class="nav-icon fas fa-book-open"></i>
+      <p>Katalog</p>
+    </a>
+  </li>
+
   @if(Auth::check() && Auth::user()->level->kode == 'USR')
   <li class="nav-item">
     <a href="{{ route('rekomendasi.index') }}"

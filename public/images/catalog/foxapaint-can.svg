@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="460" viewBox="0 0 360 460" role="img" aria-label="Foxapaint product can">
+  <defs>
+    <linearGradient id="body" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#005d32"/>
+      <stop offset="0.18" stop-color="#087b3f"/>
+      <stop offset="0.52" stop-color="#0aa04f"/>
+      <stop offset="0.82" stop-color="#087b3f"/>
+      <stop offset="1" stop-color="#004b2a"/>
+    </linearGradient>
+    <linearGradient id="metal" x1="0" x2="1">
+      <stop offset="0" stop-color="#d8d8d8"/>
+      <stop offset="0.5" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#b9b9b9"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="14" stdDeviation="12" flood-color="#000" flood-opacity=".28"/>
+    </filter>
+  </defs>
+  <rect width="360" height="460" fill="none"/>
+  <g filter="url(#shadow)">
+    <ellipse cx="180" cy="67" rx="128" ry="28" fill="#3c3c3c"/>
+    <path d="M52 70h256v306c0 29-57 52-128 52S52 405 52 376z" fill="url(#body)"/>
+    <ellipse cx="180" cy="70" rx="128" ry="31" fill="url(#metal)"/>
+    <ellipse cx="180" cy="78" rx="120" ry="22" fill="#f4f4f4"/>
+    <path d="M56 83c33 20 214 20 248 0v54H56z" fill="#e1261c"/>
+    <text x="180" y="118" text-anchor="middle" font-family="Arial, sans-serif" font-size="23" font-weight="700" fill="#fff">HIGH QUALITY COATING</text>
+    <rect x="124" y="164" width="112" height="86" rx="5" fill="#f3e221"/>
+    <text x="180" y="197" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" font-weight="800" fill="#0a8a42">FoX</text>
+    <text x="180" y="224" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="800" fill="#111">PAINT</text>
+    <text x="180" y="284" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#fff">PROTECTIVE COATING</text>
+    <text x="180" y="311" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#ecffef">INDUSTRIAL • FLOOR • DECORATIVE</text>
+    <rect x="126" y="344" width="108" height="42" rx="3" fill="#f6f6f6"/>
+    <text x="180" y="371" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="700" fill="#666">FOXAPAINT</text>
+    <ellipse cx="180" cy="377" rx="128" ry="32" fill="none" stroke="#d7b100" stroke-width="8"/>
+    <ellipse cx="180" cy="379" rx="120" ry="20" fill="rgba(0,0,0,.12)"/>
+  </g>
+</svg>

@@ -32,6 +32,17 @@ class ProdukController extends Controller
         return view('produk.create', compact('kategori'));
     }
 
+    public function catalog()
+    {
+        $produkByKategori = Produk::with('kategori')
+            ->orderBy('id_kategori')
+            ->orderBy('nama')
+            ->get()
+            ->groupBy(fn ($produk) => $produk->kategori->nama ?? 'Lainnya');
+
+        return view('katalog.index', compact('produkByKategori'));
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
