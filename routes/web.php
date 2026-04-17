@@ -114,14 +114,13 @@ Route::middleware('auth')->group(function () {
     */
     });
 
-    Route::get('/rekomendasi', [RekomendasiController::class, 'index'])
-        ->name('rekomendasi.index');
+    Route::middleware('role:USR')->group(function () {
+        Route::get('/rekomendasi', [RekomendasiController::class, 'index'])
+            ->name('rekomendasi.index');
 
-    Route::post('/rekomendasi', [RekomendasiController::class, 'store'])
-        ->name('rekomendasi.store');
-
-    Route::get('/rekomendasi/{id}/show', [RekomendasiController::class, 'show'])
-        ->name('rekomendasi.show');
+        Route::post('/rekomendasi', [RekomendasiController::class, 'store'])
+            ->name('rekomendasi.store');
+    });
 
 
     /*

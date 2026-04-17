@@ -38,6 +38,18 @@
     </li>
 
     <li class="nav-item">
+      <button
+        type="button"
+        class="nav-link btn btn-link"
+        id="theme-toggle"
+        aria-label="Ubah tampilan dark mode"
+        title="Ubah tampilan dark mode"
+      >
+        <i class="fas fa-moon"></i>
+      </button>
+    </li>
+
+    <li class="nav-item">
       <a class="nav-link" data-widget="fullscreen" href="#" role="button">
         <i class="fas fa-expand-arrows-alt"></i>
       </a>
@@ -109,6 +121,16 @@
     </a>
   </li>
 
+  @if(Auth::check() && Auth::user()->level->kode == 'USR')
+  <li class="nav-item">
+    <a href="{{ route('rekomendasi.index') }}"
+       class="nav-link {{ request()->routeIs('rekomendasi.*') ? 'active' : '' }}">
+      <i class="nav-icon fas fa-search"></i>
+      <p>Rekomendasi Produk</p>
+    </a>
+  </li>
+  @endif
+
   <!-- ================= ADMIN ONLY ================= -->
   @if(Auth::check() && Auth::user()->level->kode == 'ADM')
 
@@ -162,3 +184,46 @@
     </nav>
   </div>
 </aside>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const storageKey = 'foxapaint-theme';
+  const body = document.body;
+  const navbar = document.querySelector('.main-header');
+  const toggleButton = document.getElementById('theme-toggle');
+  const toggleIcon = toggleButton ? toggleButton.querySelector('i') : null;
+
+  if (!toggleButton || !navbar) {
+    return;
+  }
+
+  function applyTheme(theme) {
+    const isDark = theme === 'dark';
+
+    body.classList.toggle('dark-mode', isDark);
+    navbar.classList.toggle('navbar-white', !isDark);
+    navbar.classList.toggle('navbar-light', !isDark);
+    navbar.classList.toggle('navbar-dark', isDark);
+
+    toggleButton.classList.toggle('text-warning', isDark);
+    toggleButton.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+    toggleButton.setAttribute('title', isDark ? 'Ubah ke light mode' : 'Ubah ke dark mode');
+
+    if (toggleIcon) {
+      toggleIcon.classList.toggle('fa-moon', !isDark);
+      toggleIcon.classList.toggle('fa-sun', isDark);
+    }
+  }
+
+  const savedTheme = localStorage.getItem(storageKey);
+  const initialTheme = savedTheme === 'dark' ? 'dark' : 'light';
+
+  applyTheme(initialTheme);
+
+  toggleButton.addEventListener('click', function () {
+    const nextTheme = body.classList.contains('dark-mode') ? 'light' : 'dark';
+    localStorage.setItem(storageKey, nextTheme);
+    applyTheme(nextTheme);
+  });
+});
+</script>
