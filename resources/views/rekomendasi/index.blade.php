@@ -57,7 +57,7 @@
 
 <div class="callout callout-info">
   <h5 class="mb-2">Isi kebutuhan produk terlebih dahulu</h5>
-  <p class="mb-0">Pilih kategori, sub kategori, dan lokasi penggunaan agar sistem bisa menampilkan produk yang paling sesuai.</p>
+  <p class="mb-0">Pilih kategori, sub kategori, lokasi penggunaan, dan kelebihan yang dibutuhkan agar sistem bisa menampilkan produk yang paling sesuai.</p>
 </div>
 
 {{-- KATEGORI --}}
@@ -104,6 +104,28 @@
   </div>
 </div>
 
+{{-- KELEBIHAN --}}
+<div class="form-group">
+  <label>Kelebihan yang Dibutuhkan *</label>
+  <div class="row">
+    @foreach($kelebihanOptions as $item)
+    <div class="col-md-4">
+      <div class="form-check">
+        <input
+          type="checkbox"
+          name="kelebihan[]"
+          value="{{ $item }}"
+          class="form-check-input"
+          id="kelebihan-{{ \Illuminate\Support\Str::slug($item) }}"
+          {{ in_array($item, old('kelebihan', [])) ? 'checked' : '' }}
+        >
+        <label class="form-check-label" for="kelebihan-{{ \Illuminate\Support\Str::slug($item) }}">{{ $item }}</label>
+      </div>
+    </div>
+    @endforeach
+  </div>
+</div>
+
 </div>
 
 <div class="card-footer text-center">
@@ -129,6 +151,7 @@
           <th>Kategori</th>
           <th>Sub Kategori</th>
           <th>Lokasi</th>
+          <th>Kelebihan</th>
           <th>Waktu Input</th>
         </tr>
       </thead>
@@ -138,6 +161,7 @@
           <td>{{ $item->kategori }}</td>
           <td>{{ $item->sub_kategori }}</td>
           <td>{{ $item->lokasi_penggunaan }}</td>
+          <td>{{ $item->kelebihan }}</td>
           <td>{{ optional($item->created_at)->format('d-m-Y H:i:s') ?? '-' }}</td>
         </tr>
         @endforeach
@@ -152,13 +176,14 @@
 
 
 {{-- ================= HASIL REKOMENDASI ================= --}}
-@if(isset($hasil) && count($hasil))
+@if($hasSubmitted ?? false)
 <div class="card card-success">
   <div class="card-header">
     <h3 class="card-title">Hasil Rekomendasi</h3>
   </div>
 
   <div class="card-body">
+    @if(isset($hasil) && count($hasil))
     <table class="table table-bordered">
       <thead>
         <tr>
@@ -167,7 +192,9 @@
           <th>Kategori</th>
           <th>Sub</th>
           <th>Lokasi</th>
+          <th>Kelebihan</th>
           <th>Kecocokan</th>
+          <th>Perhitungan</th>
           <th>Aksi</th>
         </tr>
       </thead>
@@ -179,12 +206,18 @@
           <td>{{ $item['produk']->kategori->nama ?? '-' }}</td>
           <td>{{ $item['produk']->sub_kategori }}</td>
           <td>{{ $item['produk']->lokasi_penggunaan }}</td>
+          <td>{{ $item['produk']->kelebihan }}</td>
           <td>
-            <span class="badge badge-success">{{ $item['score'] }}%</span>
-            <div class="small text-muted mt-1">
-              Kategori {{ $item['kategori_score'] }}%,
-              Sub {{ $item['sub_kategori_score'] }}%,
-              Lokasi {{ $item['lokasi_score'] }}%
+            <span class="badge badge-success">{{ number_format($item['score'], 4) }}</span>
+          </td>
+          <td>
+            <div class="small text-muted">
+              n = {{ $item['n'] }},
+              bi = {{ $item['bi'] }},
+              bj = {{ $item['bj'] }}
+            </div>
+            <div class="small mt-1">
+              Sim = 2 x {{ $item['n'] }} / ({{ $item['bi'] }} + {{ $item['bj'] }})
             </div>
           </td>
           <td>
@@ -199,6 +232,12 @@
         @endforeach
       </tbody>
     </table>
+    @else
+    <div class="alert alert-warning mb-0">
+      Tidak ada produk dengan nilai kecocokan minimal {{ number_format($threshold ?? 0.5, 4) }}.
+      Silakan ubah pilihan kebutuhan produk untuk mendapatkan rekomendasi.
+    </div>
+    @endif
   </div>
 </div>
 @endif

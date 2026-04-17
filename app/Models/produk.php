@@ -18,7 +18,8 @@ class Produk extends Model
         'sub_kategori',
         'base',
         'lokasi_penggunaan',
-        'fungsi'
+        'fungsi',
+        'kelebihan'
     ];
 
     // 🔥 RELASI KE KATEGORI

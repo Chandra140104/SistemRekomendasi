@@ -42,18 +42,13 @@
               </div>
 
               <div class="form-group">
-                <label>Kode Produk</label>
-                <input type="text" name="kode" class="form-control"
-                       value="{{ $produk->kode }}" required>
-              </div>
-
-              <div class="form-group">
                 <label>Kategori</label>
-                <select name="kategori" class="form-control" required>
-                  @foreach(['Acrylic','Alkyd','Epoxy','Polyurethane','Floor Coating','Decorative','Waterproofing'] as $kat)
-                    <option value="{{ $kat }}"
-                      {{ $produk->kategori == $kat ? 'selected' : '' }}>
-                      {{ $kat }}
+                <select name="id_kategori" class="form-control" required>
+                  <option value="">-- Pilih Kategori --</option>
+                  @foreach($kategori as $kat)
+                    <option value="{{ $kat->id_kategori }}"
+                      {{ $produk->id_kategori == $kat->id_kategori ? 'selected' : '' }}>
+                      {{ $kat->nama }}
                     </option>
                   @endforeach
                 </select>
@@ -61,22 +56,33 @@
 
               <div class="form-group">
                 <label>Sub Kategori</label>
-                <select name="sub_kategori" class="form-control" required>
-                  @foreach(['Finish','Primer','Waterproofing','Self Leveling','Antistatic','Anti Slip','Elastomeric','Resin'] as $sub)
-                    <option value="{{ $sub }}"
-                      {{ $produk->sub_kategori == $sub ? 'selected' : '' }}>
-                      {{ $sub }}
-                    </option>
-                  @endforeach
-                </select>
-              </div>
+                <div class="row">
+                  @php
+                    $subKategoriList = [
+                      'Mortar',
+                      'Primer 1st',
+                      'Primer 2nd',
+                      'Finish 3rd',
+                      'FInish Matte 3rd',
+                      'Finish Gloss 3rd',
+                      'Protect 3rd'
+                    ];
+                  @endphp
 
-              <div class="form-group">
-                <label>Base</label>
-                <select name="base" class="form-control" required>
-                  <option value="Solvent Based" {{ $produk->base == 'Solvent Based' ? 'selected' : '' }}>Solvent Based</option>
-                  <option value="Water Based" {{ $produk->base == 'Water Based' ? 'selected' : '' }}>Water Based</option>
-                </select>
+                  @foreach($subKategoriList as $sub)
+                  <div class="col-md-4">
+                    <div class="form-check">
+                      <input class="form-check-input"
+                             type="checkbox"
+                             name="sub_kategori[]"
+                             value="{{ $sub }}"
+                             id="sub-{{ \Illuminate\Support\Str::slug($sub) }}"
+                             {{ in_array($sub, $produk->sub_kategori) ? 'checked' : '' }}>
+                      <label class="form-check-label" for="sub-{{ \Illuminate\Support\Str::slug($sub) }}">{{ $sub }}</label>
+                    </div>
+                  </div>
+                  @endforeach
+                </div>
               </div>
 
               <div class="form-group">
@@ -84,8 +90,8 @@
                 <div class="row">
                   @php
                     $lokasi = [
-                      'Besi','Tembok','Industri','Kayu','Baja','Lantai','Galvanis',
-                      'Tangki','Area Basah','Outdoor','Atap','Beton','Dinding','Exterior'
+                      'Besi Indoor','Besi Outdoor','Beton Indoor','Beton Outdoor',
+                      'Lantai Kering','Lantai Basah','Dalam Air'
                     ];
                   @endphp
 
@@ -96,8 +102,9 @@
                              type="checkbox"
                              name="lokasi_penggunaan[]"
                              value="{{ $l }}"
+                             id="lokasi-{{ \Illuminate\Support\Str::slug($l) }}"
                              {{ in_array($l, $produk->lokasi_penggunaan) ? 'checked' : '' }}>
-                      <label class="form-check-label">{{ $l }}</label>
+                      <label class="form-check-label" for="lokasi-{{ \Illuminate\Support\Str::slug($l) }}">{{ $l }}</label>
                     </div>
                   </div>
                   @endforeach
@@ -105,8 +112,39 @@
               </div>
 
               <div class="form-group">
-                <label>Fungsi</label>
-                <textarea name="fungsi" rows="3" class="form-control" required>{{ $produk->fungsi }}</textarea>
+                <label>Kelebihan</label>
+                <div class="row">
+                  @php
+                    $kelebihanList = [
+                      'Tahan Kimia',
+                      'Tahan Gesekan',
+                      'Cepat Kering',
+                      'Tahan Karat',
+                      'Tahan Abrasi',
+                      'Tahan Panas',
+                      'Tahan Sinar Matahari',
+                      'Tahan Cuaca',
+                      'Viskositas Rendah',
+                      'Tidak Bau Tajam',
+                      'Bawah Kapal',
+                      'Anti Static'
+                    ];
+                  @endphp
+
+                  @foreach($kelebihanList as $kelebihan)
+                  <div class="col-md-4">
+                    <div class="form-check">
+                      <input class="form-check-input"
+                             type="checkbox"
+                             name="kelebihan[]"
+                             value="{{ $kelebihan }}"
+                             id="kelebihan-{{ \Illuminate\Support\Str::slug($kelebihan) }}"
+                             {{ in_array($kelebihan, $produk->kelebihan) ? 'checked' : '' }}>
+                      <label class="form-check-label" for="kelebihan-{{ \Illuminate\Support\Str::slug($kelebihan) }}">{{ $kelebihan }}</label>
+                    </div>
+                  </div>
+                  @endforeach
+                </div>
               </div>
 
             </div>

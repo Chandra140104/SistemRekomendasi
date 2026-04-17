@@ -120,6 +120,12 @@ Route::middleware('auth')->group(function () {
 
         Route::post('/rekomendasi', [RekomendasiController::class, 'store'])
             ->name('rekomendasi.store');
+
+        Route::get('/riwayat-input', [RekomendasiController::class, 'history'])
+            ->name('rekomendasi.history');
+
+        Route::get('/riwayat-input/{id}', [RekomendasiController::class, 'historyShow'])
+            ->name('rekomendasi.history.show');
     });
 
 

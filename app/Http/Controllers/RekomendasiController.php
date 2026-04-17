@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class RekomendasiController extends Controller
 {
-    private const DEFAULT_BASE_VALUE = 'Tidak diisi';
+    private const THRESHOLD = 0.5;
 
     /**
      * ===============================
@@ -19,13 +19,12 @@ class RekomendasiController extends Controller
      */
     public function index()
     {
-        $riwayatList = $this->getRiwayatList();
-        $riwayat = $riwayatList->first();
-
         return view('rekomendasi.index', [
-            'riwayat' => $riwayat,
-            'riwayatList' => $riwayatList,
+            'riwayat' => null,
+            'riwayatList' => collect(),
             'hasil'   => null,
+            'hasSubmitted' => false,
+            'threshold' => self::THRESHOLD,
             ...$this->getFormOptions(),
         ]);
     }
@@ -42,6 +41,7 @@ class RekomendasiController extends Controller
             'kategori' => 'required',
             'sub_kategori' => 'required',
             'lokasi_penggunaan' => 'required|array|min:1',
+            'kelebihan' => 'required|array|min:1',
         ]);
 
         // ================= SIMPAN INPUT USER =================
@@ -49,84 +49,58 @@ class RekomendasiController extends Controller
             'id_user' => Auth::id(),
             'kategori' => $data['kategori'],
             'sub_kategori' => $data['sub_kategori'],
-            'base' => self::DEFAULT_BASE_VALUE,
+            'kelebihan' => implode(',', $data['kelebihan']),
             'lokasi_penggunaan' => implode(',', $data['lokasi_penggunaan']),
         ]);
 
         $riwayatList = $this->getRiwayatList();
         $riwayat = $riwayatList->first();
 
-        // ================= BOBOT ATRIBUT (SESUI PAPER) =================
-        $bobot = [
-            'kategori' => 0.40,
-            'sub_kategori' => 0.30,
-            'lokasi' => 0.30,
-        ];
-
-        // ================= CONTENT-BASED SIMILARITY =================
-        $hasil = [];
-        $produkList = Produk::with('kategori')->get();
-
-        foreach ($produkList as $produk) {
-            $similarity = 0;
-            $kategoriProduk = $produk->kategori->nama ?? null;
-            $subKategoriProduk = $this->normalizeSetValues($produk->sub_kategori);
-            $lokasiProduk = $this->normalizeSetValues($produk->lokasi_penggunaan);
-
-            // --- KATEGORI ---
-            if ($kategoriProduk === $data['kategori']) {
-                $similarity += $bobot['kategori'];
-            }
-
-            // --- SUB KATEGORI (DICE SIMILARITY) ---
-            $subKategoriScore = $this->diceSimilarity(
-                [$data['sub_kategori']],
-                $subKategoriProduk
-            );
-            $similarity += $subKategoriScore * $bobot['sub_kategori'];
-
-            // --- LOKASI (DICE SIMILARITY) ---
-            $lokasiScore = $this->diceSimilarity(
-                $data['lokasi_penggunaan'],
-                $lokasiProduk
-            );
-            $similarity += $lokasiScore * $bobot['lokasi'];
-
-            // --- KONVERSI KE PERSENTASE ---
-            $persen = round($similarity * 100, 2);
-
-            // --- THRESHOLD ---
-            if ($persen >= 40) {
-                $hasil[] = [
-                    'produk' => $produk,
-                    'score' => $persen,
-                    'kategori_score' => round(($kategoriProduk === $data['kategori'] ? 1 : 0) * 100, 2),
-                    'sub_kategori_score' => round($subKategoriScore * 100, 2),
-                    'lokasi_score' => round($lokasiScore * 100, 2),
-                ];
-            }
-        }
-
-        // ================= SORTING =================
-        usort($hasil, fn ($a, $b) => $b['score'] <=> $a['score']);
-        $hasil = array_values(array_map(function ($item, $index) {
-            $item['ranking'] = $index + 1;
-            return $item;
-        }, $hasil, array_keys($hasil)));
+        $hasil = $this->calculateRecommendations($data);
 
         return view('rekomendasi.index', [
             'hasil' => $hasil,
             'riwayat' => $riwayat,
             'riwayatList' => $riwayatList,
+            'hasSubmitted' => true,
+            'threshold' => self::THRESHOLD,
             ...$this->getFormOptions(),
         ]);
+    }
+
+    public function history()
+    {
+        $riwayatList = InputRekomendasi::where('id_user', Auth::id())
+            ->orderByDesc('created_at')
+            ->get();
+
+        return view('rekomendasi.history', compact('riwayatList'));
+    }
+
+    public function historyShow($id)
+    {
+        $riwayat = InputRekomendasi::where('id_user', Auth::id())
+            ->where('id_input', $id)
+            ->firstOrFail();
+
+        $data = [
+            'kategori' => $riwayat->kategori,
+            'sub_kategori' => $riwayat->sub_kategori,
+            'lokasi_penggunaan' => $this->normalizeSetValues($riwayat->lokasi_penggunaan),
+            'kelebihan' => $this->normalizeSetValues($riwayat->kelebihan),
+        ];
+
+        $hasil = $this->calculateRecommendations($data);
+        $threshold = self::THRESHOLD;
+
+        return view('rekomendasi.history-show', compact('riwayat', 'hasil', 'threshold'));
     }
 
     private function getRiwayatList()
     {
         return InputRekomendasi::where('id_user', Auth::id())
             ->orderByDesc('created_at')
-            ->limit(5)
+            ->limit(1)
             ->get();
     }
 
@@ -159,11 +133,54 @@ class RekomendasiController extends Controller
             ->values()
             ->all();
 
+        $kelebihanOptions = Produk::query()
+            ->whereNotNull('kelebihan')
+            ->pluck('kelebihan')
+            ->map(fn ($item) => array_map('trim', explode(',', $item)))
+            ->flatten()
+            ->filter()
+            ->unique()
+            ->sort()
+            ->values()
+            ->all();
+
         return [
             'kategoriOptions' => $kategoriOptions,
             'subKategoriOptions' => $subKategoriOptions,
             'lokasiOptions' => $lokasiOptions,
+            'kelebihanOptions' => $kelebihanOptions,
         ];
+    }
+
+    private function calculateRecommendations(array $data): array
+    {
+        $hasil = [];
+        $produkList = Produk::with('kategori')->get();
+        $userKeywords = $this->buildUserKeywords($data);
+
+        foreach ($produkList as $produk) {
+            $productKeywords = $this->buildProductKeywords($produk);
+            $comparison = $this->compareKeywords($userKeywords, $productKeywords);
+            $score = round($comparison['score'], 4);
+
+            if ($score >= self::THRESHOLD) {
+                $hasil[] = [
+                    'produk' => $produk,
+                    'score' => $score,
+                    'n' => $comparison['n'],
+                    'bi' => $comparison['bi'],
+                    'bj' => $comparison['bj'],
+                    'matched_keywords' => $comparison['matched_keywords'],
+                ];
+            }
+        }
+
+        usort($hasil, fn ($a, $b) => $b['score'] <=> $a['score']);
+
+        return array_values(array_map(function ($item, $index) {
+            $item['ranking'] = $index + 1;
+            return $item;
+        }, $hasil, array_keys($hasil)));
     }
 
     private function normalizeSetValues(?string $value): array
@@ -179,30 +196,61 @@ class RekomendasiController extends Controller
             ->all();
     }
 
-    private function diceSimilarity(array $userValues, array $productValues): float
+    private function buildUserKeywords(array $data): array
     {
-        $userSet = collect($userValues)
+        return collect([
+            $data['kategori'],
+            $data['sub_kategori'],
+            ...$data['lokasi_penggunaan'],
+            ...$data['kelebihan'],
+        ])
             ->map(fn ($item) => trim((string) $item))
             ->filter()
             ->unique()
             ->values()
             ->all();
+    }
 
-        $productSet = collect($productValues)
+    private function buildProductKeywords(Produk $produk): array
+    {
+        return collect([
+            $produk->kategori->nama ?? null,
+            ...$this->normalizeSetValues($produk->sub_kategori),
+            ...$this->normalizeSetValues($produk->lokasi_penggunaan),
+            ...$this->normalizeSetValues($produk->kelebihan),
+        ])
             ->map(fn ($item) => trim((string) $item))
             ->filter()
             ->unique()
             ->values()
             ->all();
+    }
 
-        $totalItem = count($userSet) + count($productSet);
+    private function compareKeywords(array $userKeywords, array $productKeywords): array
+    {
+        $matchedKeywords = array_values(array_intersect($userKeywords, $productKeywords));
+        $bi = count($userKeywords);
+        $bj = count($productKeywords);
+        $totalItem = $bi + $bj;
 
         if ($totalItem === 0) {
-            return 0;
+            return [
+                'score' => 0,
+                'n' => 0,
+                'bi' => 0,
+                'bj' => 0,
+                'matched_keywords' => [],
+            ];
         }
 
-        $intersection = count(array_intersect($userSet, $productSet));
+        $n = count($matchedKeywords);
 
-        return (2 * $intersection) / $totalItem;
+        return [
+            'score' => (2 * $n) / $totalItem,
+            'n' => $n,
+            'bi' => $bi,
+            'bj' => $bj,
+            'matched_keywords' => $matchedKeywords,
+        ];
     }
 }

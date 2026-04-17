@@ -15,7 +15,7 @@ class InputRekomendasi extends Model
         'id_user',
         'kategori',
         'sub_kategori',
-        'base',
+        'kelebihan',
         'lokasi_penggunaan',
         'created_at', // ⬅️ TAMBAHKAN
     ];

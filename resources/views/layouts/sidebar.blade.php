@@ -124,9 +124,16 @@
   @if(Auth::check() && Auth::user()->level->kode == 'USR')
   <li class="nav-item">
     <a href="{{ route('rekomendasi.index') }}"
-       class="nav-link {{ request()->routeIs('rekomendasi.*') ? 'active' : '' }}">
+       class="nav-link {{ request()->routeIs('rekomendasi.index') ? 'active' : '' }}">
       <i class="nav-icon fas fa-search"></i>
       <p>Rekomendasi Produk</p>
+    </a>
+  </li>
+  <li class="nav-item">
+    <a href="{{ route('rekomendasi.history') }}"
+       class="nav-link {{ request()->routeIs('rekomendasi.history*') ? 'active' : '' }}">
+      <i class="nav-icon fas fa-history"></i>
+      <p>Riwayat Input</p>
     </a>
   </li>
   @endif

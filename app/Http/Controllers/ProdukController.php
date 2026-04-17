@@ -67,7 +67,9 @@ class ProdukController extends Controller
     public function edit(Produk $produk)
     {
         $kategori = Kategori::all();
+        $produk->sub_kategori = explode(',', $produk->sub_kategori);
         $produk->lokasi_penggunaan = explode(',', $produk->lokasi_penggunaan);
+        $produk->kelebihan = explode(',', $produk->kelebihan);
 
         return view('produk.edit', compact('produk', 'kategori'));
     }
@@ -76,22 +78,18 @@ class ProdukController extends Controller
     {
         $validated = $request->validate([
             'nama' => 'required|string|max:100',
-            'kode' => 'required|string|max:50',
             'id_kategori' => 'required|exists:kategori,id_kategori',
-            'sub_kategori' => 'required|string|max:50',
-            'base' => 'required|string|max:50',
+            'sub_kategori' => 'required|array|min:1',
             'lokasi_penggunaan' => 'required|array',
-            'fungsi' => 'required|string',
+            'kelebihan' => 'required|array|min:1',
         ]);
 
         $produk->update([
             'nama' => $validated['nama'],
-            'kode' => $validated['kode'],
             'id_kategori' => $validated['id_kategori'],
-            'sub_kategori' => $validated['sub_kategori'],
-            'base' => $validated['base'],
+            'sub_kategori' => implode(',', $validated['sub_kategori']),
             'lokasi_penggunaan' => implode(',', $validated['lokasi_penggunaan']),
-            'fungsi' => $validated['fungsi'],
+            'kelebihan' => implode(',', $validated['kelebihan']),
         ]);
 
         return redirect()->route('produk.index')
