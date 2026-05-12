@@ -40,9 +40,9 @@
         </td>
       </tr>
 
-      <!-- Kelebihan -->
+      <!-- Kebutuhan -->
       <tr>
-        <th>Kelebihan</th>
+        <th>Kebutuhan</th>
         <td>
           @foreach(explode(',', $produk->kelebihan) as $k)
             <span class="badge badge-success">{{ $k }}</span>

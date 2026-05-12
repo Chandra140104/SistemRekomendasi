@@ -33,6 +33,22 @@
 
   <section class="content">
     <div class="container-fluid">
+      @if(session('success'))
+      <div class="alert alert-success">
+        {{ session('success') }}
+      </div>
+      @endif
+
+      @if($errors->any())
+      <div class="alert alert-danger">
+        <ul class="mb-0 pl-3">
+          @foreach($errors->all() as $error)
+          <li>{{ $error }}</li>
+          @endforeach
+        </ul>
+      </div>
+      @endif
+
       <div class="row">
         <div class="col-md-4">
           <div class="card card-primary card-outline">
@@ -67,17 +83,38 @@
                 <i class="fas fa-id-card mr-1"></i> Data Users
               </h3>
             </div>
-            <div class="card-body p-0">
-              <table class="table table-bordered mb-0">
-                <tr>
-                  <th>Nama</th>
-                  <td>{{ $user->name }}</td>
-                </tr>
-                <tr>
-                  <th>Email</th>
-                  <td>{{ $user->email }}</td>
-                </tr>
-              </table>
+            <div class="card-body">
+              <form action="{{ route('profile.update') }}" method="POST">
+                @csrf
+                @method('PUT')
+
+                <div class="form-group">
+                  <label for="name">Nama</label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    class="form-control"
+                    value="{{ old('name', $user->name) }}"
+                    required
+                  >
+                </div>
+
+                <div class="form-group mb-0">
+                  <label>Email</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    value="{{ $user->email }}"
+                    readonly
+                  >
+                </div>
+                <div class="text-right mt-3">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save mr-1"></i> Simpan Nama
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
 

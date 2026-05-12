@@ -10,6 +10,8 @@ use App\Http\Controllers\LevelController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\RekomendasiController;
 use App\Http\Controllers\UserController;
+use App\Models\Kategori;
+use App\Models\Produk;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,10 +19,39 @@ use App\Http\Controllers\UserController;
 |--------------------------------------------------------------------------
 */
 
-// Login page
+// Landing page
 Route::get('/', function () {
+    $produkLanding = Produk::with('kategori')
+        ->orderBy('nama')
+        ->get();
+
+    $kategoriLanding = $produkLanding
+        ->pluck('kategori.nama')
+        ->filter()
+        ->unique()
+        ->values();
+
+    $totalProdukLanding = Produk::count();
+
+    return view('login.home', compact(
+        'totalProdukLanding',
+        'produkLanding',
+        'kategoriLanding'
+    ));
+})->name('landing');
+
+// Login page
+Route::get('/login', function () {
     return view('login.login');
 })->name('login');
+
+Route::get('/about', function () {
+    return view('login.about');
+})->name('about');
+
+Route::get('/product', function () {
+    return view('login.product');
+})->name('product');
 
 // Proses login
 Route::post('/login', [AuthController::class, 'login'])
@@ -77,7 +108,43 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
 
     if (Auth::user()->level->kode == 'ADM') {
-        return view('dashboard.admin');
+        $totalProduk = Produk::count();
+        $totalKategori = Kategori::count();
+
+        $totalSubKategori = Produk::query()
+            ->whereNotNull('sub_kategori')
+            ->pluck('sub_kategori')
+            ->map(fn ($item) => array_map('trim', explode(',', $item)))
+            ->flatten()
+            ->filter()
+            ->unique()
+            ->count();
+
+        $totalLokasiPenggunaan = Produk::query()
+            ->whereNotNull('lokasi_penggunaan')
+            ->pluck('lokasi_penggunaan')
+            ->map(fn ($item) => array_map('trim', explode(',', $item)))
+            ->flatten()
+            ->filter()
+            ->unique()
+            ->count();
+
+        $totalKebutuhan = Produk::query()
+            ->whereNotNull('kelebihan')
+            ->pluck('kelebihan')
+            ->map(fn ($item) => array_map('trim', explode(',', $item)))
+            ->flatten()
+            ->filter()
+            ->unique()
+            ->count();
+
+        return view('dashboard.admin', compact(
+            'totalProduk',
+            'totalKategori',
+            'totalSubKategori',
+            'totalLokasiPenggunaan',
+            'totalKebutuhan'
+        ));
     } else {
         return view('dashboard.user');
     }
@@ -86,6 +153,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/profile', [UserController::class, 'profile'])
         ->name('profile.index');
+    Route::put('/profile', [UserController::class, 'updateProfile'])
+        ->name('profile.update');
 
     Route::get('/katalog', [ProdukController::class, 'catalog'])
         ->name('katalog.index');

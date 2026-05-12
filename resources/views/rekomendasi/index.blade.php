@@ -138,7 +138,7 @@
 
 <div class="callout callout-info">
   <h5 class="mb-2">Isi kebutuhan produk terlebih dahulu</h5>
-  <p class="mb-0">Pilih kategori, sub kategori, lokasi penggunaan, dan kelebihan yang dibutuhkan agar sistem bisa menampilkan produk yang paling sesuai.</p>
+  <p class="mb-0">Pilih kategori, sub kategori, lokasi penggunaan, dan kebutuhan yang diinginkan agar sistem bisa menampilkan produk yang paling sesuai.</p>
 </div>
 
 {{-- KATEGORI --}}
@@ -185,9 +185,9 @@
   </div>
 </div>
 
-{{-- KELEBIHAN --}}
+{{-- KEBUTUHAN --}}
 <div class="form-group">
-  <label>Kelebihan yang Dibutuhkan *</label>
+  <label>Kebutuhan *</label>
   <div class="row">
     @foreach($kelebihanOptions as $item)
     <div class="col-md-4">
@@ -232,7 +232,7 @@
           <th>Kategori</th>
           <th>Sub Kategori</th>
           <th>Lokasi</th>
-          <th>Kelebihan</th>
+          <th>Kebutuhan</th>
           <th>Waktu Input</th>
         </tr>
       </thead>
@@ -273,7 +273,7 @@
           <th>Kategori</th>
           <th>Sub</th>
           <th>Lokasi</th>
-          <th>Kelebihan</th>
+          <th>Kebutuhan</th>
           <th>Kecocokan</th>
           <th>Perhitungan</th>
           <th>Aksi</th>
@@ -371,7 +371,7 @@
                 <span class="catalog-attribute-value" id="modalProdukLokasi">-</span>
               </li>
               <li>
-                <span class="catalog-attribute-label">Kelebihan</span>
+                <span class="catalog-attribute-label">Kebutuhan</span>
                 <span class="catalog-attribute-value" id="modalProdukKelebihan">-</span>
               </li>
               <li>

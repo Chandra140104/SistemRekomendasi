@@ -47,7 +47,7 @@
                   <th>Kategori</th>
                   <th>Sub Kategori</th>
                   <th>Lokasi Penggunaan</th>
-                  <th>Kelebihan</th>
+                  <th>Kebutuhan</th>
                   <th>Waktu Input</th>
                   <th class="text-center">Aksi</th>
                 </tr>

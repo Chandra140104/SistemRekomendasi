@@ -112,7 +112,7 @@
               </div>
 
               <div class="form-group">
-                <label>Kelebihan</label>
+                <label>Kebutuhan</label>
                 <div class="row">
                   @php
                     $kelebihanList = [

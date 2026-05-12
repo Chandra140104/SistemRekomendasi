@@ -133,7 +133,7 @@
               <td>{{ $riwayat->lokasi_penggunaan }}</td>
             </tr>
             <tr>
-              <th>Kelebihan</th>
+              <th>Kebutuhan</th>
               <td>{{ $riwayat->kelebihan }}</td>
             </tr>
             <tr>
@@ -160,7 +160,7 @@
                   <th>Kategori</th>
                   <th>Sub Kategori</th>
                   <th>Lokasi Penggunaan</th>
-                  <th>Kelebihan</th>
+                  <th>Kebutuhan</th>
                   <th>Kecocokan</th>
                   <th>Perhitungan</th>
                   <th>Aksi</th>
@@ -260,7 +260,7 @@
                 <span class="catalog-attribute-value" id="modalProdukLokasi">-</span>
               </li>
               <li>
-                <span class="catalog-attribute-label">Kelebihan</span>
+                <span class="catalog-attribute-label">Kebutuhan</span>
                 <span class="catalog-attribute-value" id="modalProdukKelebihan">-</span>
               </li>
               <li>

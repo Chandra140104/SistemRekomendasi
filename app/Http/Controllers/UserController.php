@@ -56,6 +56,22 @@ class UserController extends Controller
         return view('profile.index', compact('user'));
     }
 
+    public function updateProfile(Request $request)
+    {
+        $user = User::findOrFail(Auth::id());
+
+        $request->validate([
+            'name' => 'required|max:100',
+        ]);
+
+        $user->update([
+            'name' => $request->name,
+        ]);
+
+        return redirect()->route('profile.index')
+            ->with('success', 'Nama berhasil diupdate');
+    }
+
     public function edit($id)
     {
         $user = User::findOrFail($id);
