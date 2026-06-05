@@ -7,6 +7,12 @@
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/fontawesome-free/css/all.min.css') }}">
   <link rel="stylesheet" href="{{ asset('adminlte/dist/css/adminlte.min.css') }}">
   <style>
+    .rekomendasi-header {
+      background-color: #1f3f6f !important;
+      border-color: #1f3f6f !important;
+      color: #ffffff !important;
+    }
+
     .catalog-modal-card {
       display: grid;
       grid-template-columns: 230px 1fr;
@@ -77,6 +83,28 @@
       font-weight: 600;
     }
 
+    .btn-detail-hasil {
+      background-color: #274f8a;
+      border-color: #274f8a;
+      color: #ffffff;
+    }
+
+    .btn-detail-hasil:hover,
+    .btn-detail-hasil:focus {
+      background-color: #1f3f6f;
+      border-color: #1f3f6f;
+      color: #ffffff;
+    }
+
+    .breadcrumb-item a {
+      color: #1f3f6f;
+      font-weight: 600;
+    }
+
+    .breadcrumb-item a:hover {
+      color: #163255;
+    }
+
     @media (max-width: 767.98px) {
       .catalog-modal-card {
         grid-template-columns: 1fr;
@@ -103,7 +131,6 @@
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
             <li class="breadcrumb-item"><a href="{{ route('rekomendasi.history') }}">Riwayat Input</a></li>
             <li class="breadcrumb-item active">Hasil</li>
           </ol>
@@ -115,7 +142,7 @@
   <section class="content">
     <div class="container-fluid">
       <div class="card card-info">
-        <div class="card-header">
+        <div class="card-header rekomendasi-header">
           <h3 class="card-title">Input User</h3>
         </div>
         <div class="card-body p-0">
@@ -145,11 +172,17 @@
       </div>
 
       <div class="card card-success">
-        <div class="card-header">
+        <div class="card-header rekomendasi-header">
           <h3 class="card-title">Hasil Rekomendasi</h3>
         </div>
 
         <div class="card-body">
+          <div class="mb-3">
+            <a href="{{ route('rekomendasi.history') }}" class="btn btn-secondary btn-sm">
+              <i class="fas fa-arrow-left"></i> Kembali
+            </a>
+          </div>
+
           @if(count($hasil))
           <div class="table-responsive">
             <table class="table table-bordered table-striped">
@@ -187,7 +220,7 @@
                     </div>
                   </td>
                   <td>
-                    <button class="btn btn-info btn-sm"
+                    <button class="btn btn-detail-hasil btn-sm"
                       data-toggle="modal"
                       data-target="#modalShow"
                       data-nama="{{ $item['produk']->nama }}"
@@ -211,12 +244,6 @@
             Tidak ada produk dengan nilai kecocokan minimal {{ number_format($threshold, 4) }}.
           </div>
           @endif
-        </div>
-
-        <div class="card-footer">
-          <a href="{{ route('rekomendasi.history') }}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left"></i> Kembali
-          </a>
         </div>
       </div>
     </div>

@@ -6,6 +6,40 @@
 
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/fontawesome-free/css/all.min.css') }}">
   <link rel="stylesheet" href="{{ asset('adminlte/dist/css/adminlte.min.css') }}">
+  <style>
+    .rekomendasi-header {
+      background-color: #1f3f6f !important;
+      border-color: #1f3f6f !important;
+      color: #ffffff !important;
+    }
+
+    .pagination .page-item.active .page-link {
+      background-color: #ed5d17;
+      border-color: #ed5d17;
+      color: #ffffff;
+    }
+
+    .pagination .page-link {
+      color: #1f3f6f;
+    }
+
+    .pagination .page-link:hover {
+      color: #163255;
+    }
+
+    .btn-riwayat-hasil {
+      background-color: #274f8a;
+      border-color: #274f8a;
+      color: #ffffff;
+    }
+
+    .btn-riwayat-hasil:hover,
+    .btn-riwayat-hasil:focus {
+      background-color: #1f3f6f;
+      border-color: #1f3f6f;
+      color: #ffffff;
+    }
+  </style>
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -22,7 +56,6 @@
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
             <li class="breadcrumb-item active">Riwayat Input</li>
           </ol>
         </div>
@@ -33,7 +66,7 @@
   <section class="content">
     <div class="container-fluid">
       <div class="card card-info">
-        <div class="card-header">
+        <div class="card-header rekomendasi-header">
           <h3 class="card-title">List Riwayat Input Rekomendasi</h3>
         </div>
 
@@ -62,7 +95,7 @@
                   <td>{{ $riwayat->kelebihan }}</td>
                   <td>{{ optional($riwayat->created_at)->format('d-m-Y H:i:s') ?? '-' }}</td>
                   <td class="text-center">
-                    <a href="{{ route('rekomendasi.history.show', $riwayat->id_input) }}" class="btn btn-info btn-sm">
+                    <a href="{{ route('rekomendasi.history.show', $riwayat->id_input) }}" class="btn btn-riwayat-hasil btn-sm">
                       <i class="fas fa-eye"></i> Lihat Hasil
                     </a>
                   </td>

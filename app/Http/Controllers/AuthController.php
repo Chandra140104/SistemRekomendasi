@@ -11,7 +11,12 @@ class AuthController extends Controller
     {
         // Jika sudah login
         if (Auth::check()) {
-            return redirect()->route('dashboard');
+            $user = Auth::user();
+            $redirectRoute = $user && $user->level && $user->level->kode === 'USR'
+                ? 'katalog.index'
+                : 'dashboard';
+
+            return redirect()->route($redirectRoute);
         }
 
         // Jika bukan POST → tampilkan halaman login
@@ -30,9 +35,12 @@ class AuthController extends Controller
 
             $request->session()->regenerate();
 
-            // 🔥 LANGSUNG KE DASHBOARD (ROLE DITANGANI DI ROUTE)
-            return redirect()->route('dashboard')
-                ->with('login_success', true);
+            $user = Auth::user();
+            $redirectRoute = $user && $user->level && $user->level->kode === 'USR'
+                ? 'katalog.index'
+                : 'dashboard';
+
+            return redirect()->route($redirectRoute);
         }
 
         // Jika gagal

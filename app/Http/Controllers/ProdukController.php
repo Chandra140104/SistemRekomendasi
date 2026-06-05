@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Produk;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProdukController extends Controller
 {
@@ -34,13 +35,23 @@ class ProdukController extends Controller
 
     public function catalog()
     {
-        $produkByKategori = Produk::with('kategori')
-            ->orderBy('id_kategori')
+        $produkLanding = Produk::with('kategori')
             ->orderBy('nama')
-            ->get()
-            ->groupBy(fn ($produk) => $produk->kategori->nama ?? 'Lainnya');
+            ->get();
 
-        return view('katalog.index', compact('produkByKategori'));
+        $kategoriLanding = $produkLanding
+            ->pluck('kategori.nama')
+            ->filter()
+            ->unique()
+            ->values();
+
+        $totalProdukLanding = $produkLanding->count();
+
+        return view('katalog.index', compact(
+            'produkLanding',
+            'kategoriLanding',
+            'totalProdukLanding'
+        ));
     }
 
     public function store(Request $request)

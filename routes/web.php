@@ -10,6 +10,7 @@ use App\Http\Controllers\LevelController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\RekomendasiController;
 use App\Http\Controllers\UserController;
+use App\Models\InputRekomendasi;
 use App\Models\Kategori;
 use App\Models\Produk;
 
@@ -77,12 +78,23 @@ Route::post('/register', function (Request $request) {
     $request->validate([
         'name' => 'required|max:50',
         'email' => 'required|email|unique:users,email',
+        'no_telp' => 'required|string|max:30',
+        'perusahaan_instansi' => 'nullable|string|max:100',
+        'divisi_jabatan' => 'nullable|string|max:100',
+        'provinsi' => 'required|string|max:100',
+        'kota_kabupaten' => 'required|string|max:100',
         'password' => 'required|confirmed|min:3'
     ]);
 
     \App\Models\User::create([
         'name' => $request->name,
         'email' => $request->email,
+        'no_telp' => $request->no_telp,
+        'perusahaan_instansi' => $request->perusahaan_instansi,
+        'divisi_jabatan' => $request->divisi_jabatan,
+        'provinsi' => $request->provinsi,
+        'kota_kabupaten' => $request->kota_kabupaten,
+        'lokasi_kota' => trim($request->provinsi . ', ' . $request->kota_kabupaten, ', '),
         'password' => Hash::make($request->password),
         'id_level' => 2
     ]);
@@ -108,8 +120,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
 
     if (Auth::user()->level->kode == 'ADM') {
+        $threshold = 0.5;
         $totalProduk = Produk::count();
         $totalKategori = Kategori::count();
+        $produkList = Produk::with('kategori')->get();
+        $riwayatInput = InputRekomendasi::all();
 
         $totalSubKategori = Produk::query()
             ->whereNotNull('sub_kategori')
@@ -138,12 +153,114 @@ Route::middleware('auth')->group(function () {
             ->unique()
             ->count();
 
+        $normalizeValues = function (?string $value): array {
+            if (! $value) {
+                return [];
+            }
+
+            return collect(explode(',', $value))
+                ->map(fn ($item) => trim($item))
+                ->filter()
+                ->unique()
+                ->values()
+                ->all();
+        };
+
+        $buildKeywords = function (array $items): array {
+            return collect($items)
+                ->flatten()
+                ->map(fn ($item) => trim((string) $item))
+                ->filter()
+                ->unique()
+                ->values()
+                ->all();
+        };
+
+        $countEntries = function ($items) {
+            return collect($items)
+                ->map(fn ($item) => trim((string) $item))
+                ->filter()
+                ->countBy()
+                ->sortDesc()
+                ->take(5)
+                ->map(fn ($total, $nama) => [
+                    'nama' => $nama,
+                    'total' => $total,
+                ])
+                ->values();
+        };
+
+        $topProdukCounts = [];
+
+        foreach ($riwayatInput as $input) {
+            $userKeywords = $buildKeywords([
+                $input->kategori,
+                $input->sub_kategori,
+                $normalizeValues($input->lokasi_penggunaan),
+                $normalizeValues($input->kelebihan),
+            ]);
+
+            $bi = count($userKeywords);
+
+            foreach ($produkList as $produk) {
+                $productKeywords = $buildKeywords([
+                    $produk->kategori->nama ?? null,
+                    $normalizeValues($produk->sub_kategori),
+                    $normalizeValues($produk->lokasi_penggunaan),
+                    $normalizeValues($produk->kelebihan),
+                ]);
+
+                $bj = count($productKeywords);
+                $totalItem = $bi + $bj;
+
+                if ($totalItem === 0) {
+                    continue;
+                }
+
+                $matchedKeywords = array_intersect($userKeywords, $productKeywords);
+                $score = (2 * count($matchedKeywords)) / $totalItem;
+
+                if ($score >= $threshold) {
+                    $topProdukCounts[$produk->id_produk]['nama'] = $produk->nama;
+                    $topProdukCounts[$produk->id_produk]['total'] = ($topProdukCounts[$produk->id_produk]['total'] ?? 0) + 1;
+                }
+            }
+        }
+
+        $topProdukRekomendasi = collect($topProdukCounts)
+            ->sortByDesc('total')
+            ->take(10)
+            ->values();
+
+        $topKategoriRekomendasi = $countEntries(
+            $riwayatInput->pluck('kategori')
+        );
+
+        $topSubKategoriRekomendasi = $countEntries(
+            $riwayatInput->pluck('sub_kategori')
+        );
+
+        $topLokasiPenggunaanRekomendasi = $countEntries(
+            $riwayatInput->pluck('lokasi_penggunaan')
+                ->flatMap($normalizeValues)
+        );
+
+        $topKebutuhanRekomendasi = $countEntries(
+            $riwayatInput->pluck('kelebihan')
+                ->flatMap($normalizeValues)
+        );
+
         return view('dashboard.admin', compact(
             'totalProduk',
             'totalKategori',
             'totalSubKategori',
             'totalLokasiPenggunaan',
-            'totalKebutuhan'
+            'totalKebutuhan',
+            'topProdukRekomendasi',
+            'topKategoriRekomendasi',
+            'topSubKategoriRekomendasi',
+            'topLokasiPenggunaanRekomendasi',
+            'topKebutuhanRekomendasi'
         ));
     } else {
         return view('dashboard.user');

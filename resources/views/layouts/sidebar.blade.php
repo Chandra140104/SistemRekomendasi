@@ -7,71 +7,39 @@
         <i class="fas fa-bars"></i>
       </a>
     </li>
-    <li class="nav-item d-none d-sm-inline-block">
-      <a href="{{ route('dashboard') }}" class="nav-link">Home</a>
-    </li>
-    <li class="nav-item d-none d-sm-inline-block">
-      <a href="#" class="nav-link">Contact</a>
-    </li>
   </ul>
 
   <!-- Right navbar links -->
   <ul class="navbar-nav ml-auto">
-    <li class="nav-item">
-      <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-        <i class="fas fa-search"></i>
+    <li class="nav-item d-none d-sm-inline-block">
+      <a href="https://wa.me/6282134054713" class="nav-link" target="_blank" rel="noopener noreferrer" aria-label="Telepon">
+        <i class="fas fa-phone-alt"></i>
       </a>
     </li>
-
-    <li class="nav-item dropdown">
-      <a class="nav-link" data-toggle="dropdown" href="#">
-        <i class="far fa-comments"></i>
-        <span class="badge badge-danger navbar-badge">3</span>
+    <li class="nav-item d-none d-sm-inline-block">
+      <a href="mailto:marketing@primantaraindo.com" class="nav-link" aria-label="Email">
+        <i class="fas fa-envelope"></i>
       </a>
     </li>
-
-    <li class="nav-item dropdown">
-      <a class="nav-link" data-toggle="dropdown" href="#">
-        <i class="far fa-bell"></i>
-        <span class="badge badge-warning navbar-badge">15</span>
+    <li class="nav-item d-none d-sm-inline-block">
+      <a href="https://share.google/2aq90s8Y9LbSo5w2j" class="nav-link" target="_blank" rel="noopener noreferrer" aria-label="Lokasi">
+        <i class="fas fa-map-marker-alt"></i>
       </a>
     </li>
-
-    <li class="nav-item">
-      <button
-        type="button"
-        class="nav-link btn btn-link"
-        id="theme-toggle"
-        aria-label="Ubah tampilan dark mode"
-        title="Ubah tampilan dark mode"
-      >
-        <i class="fas fa-moon"></i>
-      </button>
-    </li>
-
     <li class="nav-item">
       <a class="nav-link" data-widget="fullscreen" href="#" role="button">
         <i class="fas fa-expand-arrows-alt"></i>
       </a>
     </li>
-
-    <!-- PROFILE DROPDOWN -->
     <li class="nav-item dropdown">
-      <a class="nav-link" data-toggle="dropdown" href="#">
-        <img
-          src="{{ asset('adminlte/dist/img/user2-160x160.jpg') }}"
-          class="img-circle elevation-2"
-          style="width:32px;height:32px;object-fit:cover;"
-        >
+      <a class="nav-link topbar-profile-toggle" data-toggle="dropdown" href="#" aria-haspopup="true" aria-expanded="false">
+        <span class="topbar-avatar">
+          {{ strtoupper(substr(trim(Auth::user()->name ?? 'U'), 0, 1)) }}
+        </span>
+        <i class="fas fa-chevron-down topbar-profile-caret"></i>
       </a>
 
       <div class="dropdown-menu dropdown-menu-right">
-        <span class="dropdown-item dropdown-header">
-          {{ Auth::user()->name ?? 'User' }}
-        </span>
-
-        <div class="dropdown-divider"></div>
-
         <a href="{{ route('profile.index') }}" class="dropdown-item">
           <i class="fas fa-user mr-2"></i> Profile
         </a>
@@ -80,39 +48,120 @@
 
         <form action="{{ route('logout') }}" method="POST" class="dropdown-item p-0">
           @csrf
-          <button type="submit" class="btn btn-link btn-block text-left">
+          <button type="submit" class="btn btn-link btn-block text-left topbar-logout-btn">
             <i class="fas fa-sign-out-alt mr-2"></i> Logout
           </button>
         </form>
       </div>
     </li>
+
   </ul>
 </nav>
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
-  <a href="{{ route('dashboard') }}" class="brand-link">
-    <img src="{{ asset('adminlte/dist/img/AdminLTELogo.png') }}"
-         class="brand-image img-circle elevation-3" style="opacity:.8">
-    <span class="brand-text font-weight-light">AdminLTE 3</span>
-  </a>
+<style>
+  .main-sidebar.sidebar-dark-primary {
+    background-color: #163255;
+  }
 
+  .main-sidebar.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active {
+    background-color: #ed5d17;
+    color: #ffffff;
+  }
+
+  .main-sidebar.sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active:hover {
+    background-color: #d95312;
+    color: #ffffff;
+  }
+
+  .main-sidebar .brand-link {
+    display: none;
+  }
+
+  .main-sidebar .sidebar {
+    padding-top: 0.5rem;
+  }
+
+  .main-sidebar .user-panel {
+    margin-top: 0.5rem !important;
+    justify-content: center;
+  }
+
+  .main-sidebar .user-panel .image {
+    margin-left: -8px;
+  }
+
+  .sidebar-logo-badge {
+    align-items: center;
+    background: #ffffff;
+    border-radius: 14px;
+    display: inline-flex;
+    height: 74px;
+    justify-content: center;
+    padding: 12px 14px;
+    width: 168px;
+  }
+
+  .sidebar-logo-badge img {
+    height: auto;
+    max-width: 136px;
+    width: 100%;
+  }
+
+  .topbar-profile-toggle {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+    padding-bottom: 0.5rem;
+    padding-top: 0.5rem;
+  }
+
+  .topbar-avatar {
+    align-items: center;
+    background: #ffffff;
+    border: 2px solid #1f3f6f;
+    border-radius: 50%;
+    color: #ed5d17;
+    display: inline-flex;
+    font-size: 15px;
+    font-weight: 800;
+    height: 32px;
+    justify-content: center;
+    line-height: 1;
+    text-transform: uppercase;
+    width: 32px;
+  }
+
+  .topbar-profile-caret {
+    color: #6b7280;
+    font-size: 12px;
+  }
+
+  .topbar-logout-btn {
+    color: #dc3545;
+  }
+
+  .topbar-logout-btn:hover,
+  .topbar-logout-btn:focus {
+    color: #c82333;
+    text-decoration: none;
+  }
+
+</style>
+
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
   <div class="sidebar">
 
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
       <div class="image">
-        <img src="{{ asset('adminlte/dist/img/user2-160x160.jpg') }}"
-             class="img-circle elevation-2">
-      </div>
-      <div class="info">
-        <a href="#" class="d-block">
-          {{ Auth::user()->name ?? 'User' }}
-        </a>
+        <span class="sidebar-logo-badge elevation-2">
+          <img src="{{ asset('images/Logo/Primary-Logo-12-2048x615.png') }}" alt="Primantara Indo">
+        </span>
       </div>
     </div>
 
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview">
 
-  <!-- DASHBOARD (SEMUA ROLE) -->
+  @if(Auth::check() && Auth::user()->level->kode == 'ADM')
   <li class="nav-item">
     <a href="{{ route('dashboard') }}"
        class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
@@ -120,6 +169,7 @@
       <p>Dashboard</p>
     </a>
   </li>
+  @endif
 
   <li class="nav-item">
     <a href="{{ route('katalog.index') }}"
@@ -199,46 +249,3 @@
     </nav>
   </div>
 </aside>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  const storageKey = 'foxapaint-theme';
-  const body = document.body;
-  const navbar = document.querySelector('.main-header');
-  const toggleButton = document.getElementById('theme-toggle');
-  const toggleIcon = toggleButton ? toggleButton.querySelector('i') : null;
-
-  if (!toggleButton || !navbar) {
-    return;
-  }
-
-  function applyTheme(theme) {
-    const isDark = theme === 'dark';
-
-    body.classList.toggle('dark-mode', isDark);
-    navbar.classList.toggle('navbar-white', !isDark);
-    navbar.classList.toggle('navbar-light', !isDark);
-    navbar.classList.toggle('navbar-dark', isDark);
-
-    toggleButton.classList.toggle('text-warning', isDark);
-    toggleButton.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-    toggleButton.setAttribute('title', isDark ? 'Ubah ke light mode' : 'Ubah ke dark mode');
-
-    if (toggleIcon) {
-      toggleIcon.classList.toggle('fa-moon', !isDark);
-      toggleIcon.classList.toggle('fa-sun', isDark);
-    }
-  }
-
-  const savedTheme = localStorage.getItem(storageKey);
-  const initialTheme = savedTheme === 'dark' ? 'dark' : 'light';
-
-  applyTheme(initialTheme);
-
-  toggleButton.addEventListener('click', function () {
-    const nextTheme = body.classList.contains('dark-mode') ? 'light' : 'dark';
-    localStorage.setItem(storageKey, nextTheme);
-    applyTheme(nextTheme);
-  });
-});
-</script>

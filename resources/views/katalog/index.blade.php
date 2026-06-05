@@ -9,9 +9,201 @@
   <link rel="stylesheet" href="{{ asset('adminlte/dist/css/adminlte.min.css') }}">
 
   <style>
+    .catalog-preview {
+      margin: 0 0 36px;
+      max-width: none;
+      padding: 0;
+    }
+
+    .catalog-preview-bar {
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, .10);
+      display: flex;
+      gap: 10px;
+      margin-bottom: 22px;
+      overflow-x: auto;
+      padding: 10px;
+      scrollbar-width: thin;
+    }
+
+    .catalog-preview-bar::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .catalog-preview-bar::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, .7);
+      border-radius: 999px;
+    }
+
+    .catalog-preview-chip {
+      align-items: center;
+      background: transparent;
+      border: 0;
+      border-radius: 14px;
+      color: #475569;
+      cursor: pointer;
+      display: inline-flex;
+      flex: 0 0 auto;
+      font-size: 16px;
+      font-weight: 600;
+      justify-content: center;
+      min-height: 56px;
+      min-width: 150px;
+      padding: 12px 18px;
+      text-align: center;
+      transition: .2s ease-in-out;
+    }
+
+    .catalog-preview-chip:focus {
+      outline: none;
+    }
+
+    .catalog-preview-chip:hover {
+      color: #1f3f6f;
+    }
+
+    .catalog-preview-chip.active {
+      background: #ffffff;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, .10);
+      color: #1f3f6f;
+      position: relative;
+    }
+
+    .catalog-preview-chip.active::after {
+      background: #ed5d17;
+      border-radius: 999px;
+      bottom: 8px;
+      content: "";
+      height: 3px;
+      left: 50%;
+      position: absolute;
+      transform: translateX(-50%);
+      width: 42px;
+    }
+
+    .catalog-search-box {
+      align-items: center;
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, .08);
+      color: #64748b;
+      display: flex;
+      gap: 12px;
+      min-height: 60px;
+      margin-bottom: 22px;
+      padding: 0 18px;
+    }
+
+    .catalog-search-box i {
+      color: #475569;
+      font-size: 18px;
+    }
+
+    .catalog-search-input {
+      background: transparent;
+      border: 0;
+      color: #1f2937;
+      flex: 1;
+      font-size: 17px;
+    }
+
+    .catalog-search-input:focus {
+      outline: none;
+    }
+
+    .catalog-product-grid {
+      display: grid;
+      gap: 22px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 20px;
+    }
+
+    .catalog-product-card {
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 16px 36px rgba(15, 23, 42, .10);
+      display: flex;
+      gap: 18px;
+      min-height: 100%;
+      padding: 18px;
+    }
+
+    .catalog-product-card.hidden {
+      display: none;
+    }
+
+    .catalog-product-media {
+      align-items: center;
+      background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+      border-radius: 16px;
+      display: flex;
+      flex: 0 0 118px;
+      justify-content: center;
+      min-height: 140px;
+      padding: 12px;
+    }
+
+    .catalog-product-media img {
+      height: auto;
+      max-width: 100%;
+    }
+
+    .catalog-product-body {
+      min-width: 0;
+    }
+
+    .catalog-product-category {
+      color: #f59e0b;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .catalog-product-name {
+      color: #0b4f2f;
+      font-size: 22px;
+      font-weight: 800;
+      line-height: 1.2;
+      margin: 0 0 8px;
+      text-transform: uppercase;
+    }
+
+    .catalog-product-details {
+      color: #334155;
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .catalog-product-details li {
+      margin-bottom: 4px;
+    }
+
+    .catalog-product-empty {
+      color: #64748b;
+      display: none;
+      font-size: 18px;
+      font-weight: 600;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .catalog-preview-meta {
+      color: #64748b;
+      font-size: 16px;
+      margin-top: 14px;
+    }
+
     .catalog-page {
-      background: #f4f1eb;
+      background: #ffffff;
       padding-bottom: 30px;
+    }
+
+    .catalog-page .container-fluid {
+      padding-left: 12px;
+      padding-right: 12px;
     }
 
     .catalog-sheet {
@@ -141,6 +333,22 @@
     }
 
     @media (max-width: 767.98px) {
+      .catalog-preview {
+        margin-bottom: 28px;
+      }
+
+      .catalog-product-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .catalog-product-card {
+        flex-direction: column;
+      }
+
+      .catalog-product-media {
+        flex-basis: auto;
+      }
+
       .catalog-grid {
         padding: 24px 18px 8px;
       }
@@ -175,7 +383,6 @@
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
             <li class="breadcrumb-item active">Katalog</li>
           </ol>
         </div>
@@ -185,69 +392,57 @@
 
   <section class="content catalog-page">
     <div class="container-fluid">
-      <div class="card catalog-search-card">
-        <div class="card-body">
-          <label for="catalogSearch" class="mb-2">Cari Nama Produk</label>
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text"><i class="fas fa-search"></i></span>
-            </div>
-            <input type="text" id="catalogSearch" class="form-control" placeholder="Ketik nama produk, contoh: FOXAPOX">
-          </div>
+      <section class="catalog-preview" id="katalog-cat">
+        <div class="catalog-preview-bar">
+          <button type="button" class="catalog-preview-chip active" data-filter="Semua">Semua</button>
+          @foreach (($kategoriLanding ?? collect()) as $kategori)
+            <button type="button" class="catalog-preview-chip" data-filter="{{ $kategori }}">{{ $kategori }}</button>
+          @endforeach
         </div>
-      </div>
 
-      <div id="catalogEmptySearch" class="catalog-empty-search">
-        Produk tidak tersedia
-      </div>
+        <div class="catalog-search-box">
+          <i class="fas fa-search"></i>
+          <input type="text"
+                 class="catalog-search-input"
+                 id="catalogSearchInput"
+                placeholder="cari produk cat">
+        </div>
 
-      @forelse($produkByKategori as $namaKategori => $produkList)
-      <div class="catalog-sheet" data-catalog-sheet>
-        <h2 class="category-title {{ $loop->even ? 'category-even' : '' }} {{ strtolower($namaKategori) === 'acrylic' ? 'category-acrylic' : '' }} {{ strtolower($namaKategori) === 'polyurethane' ? 'category-polyurethane' : '' }} {{ strtolower($namaKategori) === 'floor' ? 'category-floor' : '' }} {{ strtolower($namaKategori) === 'anti fouling' ? 'category-anti-fouling' : '' }} {{ strtolower($namaKategori) === 'decorative' ? 'category-decorative' : '' }} {{ strtolower($namaKategori) === 'zinc rich' ? 'category-zinc-rich' : '' }}">
-          {{ $namaKategori }} Coating
-        </h2>
+        <div class="catalog-preview-meta">{{ $totalProdukLanding ?? 0 }} produk</div>
 
-        <div class="catalog-grid">
-          <div class="row">
-            @foreach($produkList as $produk)
-            <div class="col-lg-6" data-catalog-product data-product-name="{{ strtolower($produk->nama) }}">
-              <div class="catalog-product">
-                <div class="catalog-product-image">
-                  <div class="catalog-icon" title="{{ $produk->nama }}">
-                    <i class="fas fa-fill-drip"></i>
-                  </div>
-                </div>
-
-                <div>
-                  <div class="catalog-product-title">{{ $produk->nama }}</div>
-                  <div class="catalog-product-code">OX-{{ str_pad($produk->id_produk, 3, '0', STR_PAD_LEFT) }}</div>
-                  <div class="catalog-product-sub">{{ $produk->sub_kategori }}</div>
-
-                  <ul>
-                    @foreach(explode(',', $produk->kelebihan ?? '') as $kelebihan)
-                      @if(trim($kelebihan) !== '')
-                        <li>{{ trim($kelebihan) }}</li>
-                      @endif
-                    @endforeach
-
-                    @foreach(explode(',', $produk->lokasi_penggunaan ?? '') as $lokasi)
-                      @if(trim($lokasi) !== '')
-                        <li>Untuk {{ trim($lokasi) }}</li>
-                      @endif
-                    @endforeach
-                  </ul>
-                </div>
+        <div class="catalog-product-grid" id="catalogProductGrid">
+          @foreach (($produkLanding ?? collect()) as $produk)
+            @php
+              $detailItems = array_filter([
+                  $produk->sub_kategori,
+                  $produk->lokasi_penggunaan,
+                  $produk->kelebihan,
+              ]);
+            @endphp
+            <article class="catalog-product-card"
+                     data-kategori="{{ $produk->kategori->nama ?? '' }}"
+                     data-search="{{ strtolower(trim($produk->nama ?? '')) }}">
+              <div class="catalog-product-media">
+                <img src="{{ asset('images/backgorund/product.png') }}" alt="{{ $produk->nama }}">
               </div>
-            </div>
-            @endforeach
-          </div>
+              <div class="catalog-product-body">
+                <div class="catalog-product-category">{{ $produk->kategori->nama ?? 'Tanpa Kategori' }}</div>
+                <h3 class="catalog-product-name">{{ $produk->nama }}</h3>
+                @if (!empty($produk->kode))
+                  <div class="catalog-product-code">{{ $produk->kode }}</div>
+                @endif
+                <ul class="catalog-product-details">
+                  @foreach ($detailItems as $detail)
+                    <li>{{ $detail }}</li>
+                  @endforeach
+                </ul>
+              </div>
+            </article>
+          @endforeach
         </div>
-      </div>
-      @empty
-      <div class="alert alert-info">
-        Belum ada produk yang tersedia untuk ditampilkan pada katalog.
-      </div>
-      @endforelse
+
+        <div class="catalog-product-empty" id="catalogProductEmpty">Produk tidak tersedia</div>
+      </section>
     </div>
   </section>
 </div>
@@ -262,35 +457,54 @@
 <script src="{{ asset('adminlte/dist/js/adminlte.min.js') }}"></script>
 <script>
 $(function () {
-  const searchInput = $('#catalogSearch');
-  const emptySearch = $('#catalogEmptySearch');
+  const landingSearchInput = document.getElementById('catalogSearchInput');
 
-  searchInput.on('input', function () {
-    const keyword = $(this).val().trim().toLowerCase();
-    let visibleProducts = 0;
+  if (landingSearchInput) {
+    const filterButtons = Array.from(document.querySelectorAll('.catalog-preview-chip'));
+    const productCards = Array.from(document.querySelectorAll('.catalog-product-card'));
+    const emptyState = document.getElementById('catalogProductEmpty');
+    const meta = document.querySelector('.catalog-preview-meta');
+    const totalProduk = {{ $totalProdukLanding ?? 0 }};
+    let activeFilter = 'Semua';
 
-    $('[data-catalog-sheet]').each(function () {
-      const sheet = $(this);
-      let visibleInSheet = 0;
+    const updateMeta = (visibleCount) => {
+      meta.textContent = visibleCount + ' produk';
+    };
 
-      sheet.find('[data-catalog-product]').each(function () {
-        const product = $(this);
-        const productName = product.data('product-name') || '';
-        const isMatch = keyword === '' || productName.includes(keyword);
+    const applyFilter = () => {
+      const searchTerm = (landingSearchInput.value || '').trim().toLowerCase();
+      let visibleCount = 0;
 
-        product.toggle(isMatch);
+      productCards.forEach((card) => {
+        const kategori = card.dataset.kategori || '';
+        const searchableText = card.dataset.search || '';
+        const matchesFilter = activeFilter === 'Semua' || kategori === activeFilter;
+        const matchesSearch = searchTerm === '' || searchableText.includes(searchTerm);
+        const shouldShow = matchesFilter && matchesSearch;
 
-        if (isMatch) {
-          visibleInSheet++;
-          visibleProducts++;
+        card.classList.toggle('hidden', !shouldShow);
+
+        if (shouldShow) {
+          visibleCount += 1;
         }
       });
 
-      sheet.toggle(visibleInSheet > 0);
+      emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+      updateMeta(searchTerm === '' && activeFilter === 'Semua' ? totalProduk : visibleCount);
+    };
+
+    filterButtons.forEach((button) => {
+      button.addEventListener('click', function () {
+        activeFilter = this.dataset.filter;
+        filterButtons.forEach((item) => item.classList.remove('active'));
+        this.classList.add('active');
+        applyFilter();
+      });
     });
 
-    emptySearch.toggle(keyword !== '' && visibleProducts === 0);
-  });
+    landingSearchInput.addEventListener('input', applyFilter);
+    applyFilter();
+  }
 });
 </script>
 </body>

@@ -20,6 +20,12 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'no_telp',
+        'perusahaan_instansi',
+        'divisi_jabatan',
+        'provinsi',
+        'kota_kabupaten',
+        'lokasi_kota',
         'password',
         'id_level'
     ];

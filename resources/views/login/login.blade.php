@@ -19,13 +19,86 @@
 
   <style>
     body.layout-top-nav {
-      background: linear-gradient(135deg, #eef3f6 0%, #dfe7ec 100%);
+      background-color: #ffffff;
+      background-image:
+        linear-gradient(45deg, transparent 49%, #e5e7eb 49%, #e5e7eb 51%, transparent 51%),
+        linear-gradient(-45deg, transparent 49%, #e5e7eb 49%, #e5e7eb 51%, transparent 51%);
+      background-size: 40px 40px;
+      min-height: 100vh;
+    }
+
+    body.layout-top-nav .wrapper {
+      display: flex;
+      flex-direction: column;
       min-height: 100vh;
     }
 
     .login-content-wrapper {
       background: transparent;
-      min-height: calc(100vh - 57px);
+      flex: 1 0 auto;
+      min-height: auto;
+    }
+
+    .social-topbar {
+      background: #ed5d17;
+      padding: 8px 0;
+    }
+
+    .social-topbar-inner {
+      align-items: center;
+      display: flex;
+      gap: 14px;
+    }
+
+    .social-topbar-link {
+      align-items: center;
+      background: #ffffff;
+      border-radius: 50%;
+      color: #ed5d17;
+      display: inline-flex;
+      font-size: 15px;
+      height: 30px;
+      justify-content: center;
+      transition: .2s ease-in-out;
+      width: 30px;
+    }
+
+    .social-topbar-link:hover {
+      background: #ffe5d8;
+      color: #b74206;
+    }
+
+    .public-brand-logo {
+      display: block;
+      height: 34px;
+      max-width: 220px;
+      object-fit: contain;
+      width: auto;
+    }
+
+    .landing-navbar {
+      padding-bottom: 0.8rem;
+      padding-top: 0.8rem;
+    }
+
+    .landing-navbar .navbar-nav {
+      column-gap: 26px;
+    }
+
+    .landing-navbar .navbar-brand {
+      margin-right: 2.5rem;
+    }
+
+    .landing-navbar .nav-link {
+      color: #1f3f6f !important;
+      font-weight: 600;
+      padding-left: 0.9rem;
+      padding-right: 0.9rem;
+    }
+
+    .landing-navbar .nav-link:hover,
+    .landing-navbar .nav-link:focus {
+      color: #163255 !important;
     }
 
     .login-layout {
@@ -33,11 +106,10 @@
       display: grid;
       grid-template-columns: minmax(420px, 1fr) 420px;
       gap: 110px;
-      min-height: calc(100vh - 114px);
+      min-height: calc(100vh - 210px);
       margin: 0 auto;
       max-width: 1280px;
-      padding: 32px 56px;
-      transform: translateY(-20px);
+      padding: 24px 56px 10px;
       width: 100%;
     }
 
@@ -48,6 +120,7 @@
     }
 
     .brand-title {
+      color: #ed5d17;
       font-size: clamp(42px, 5vw, 72px);
       font-weight: 900;
       letter-spacing: 5px;
@@ -57,7 +130,7 @@
     }
 
     .brand-subtitle {
-      color: #f0a500;
+      color: #1f3f6f;
       font-size: clamp(20px, 2.4vw, 34px);
       font-weight: 800;
       letter-spacing: 3px;
@@ -80,13 +153,31 @@
     }
 
     .login-card {
+      border-bottom: 4px solid #1f3f6f;
       border-radius: 16px;
       box-shadow: 0 22px 55px rgba(15, 23, 42, .16);
       overflow: hidden;
     }
 
+    .login-card.card-outline {
+      border-top: 3px solid #ed5d17;
+    }
+
     .login-card .card-header {
       background: #fff;
+    }
+
+    .login-card-logo {
+      display: inline-block;
+      max-width: 240px;
+      width: 100%;
+    }
+
+    .login-card-logo img {
+      display: block;
+      height: auto;
+      max-width: 100%;
+      width: 100%;
     }
 
     .recommendation-flow {
@@ -191,12 +282,25 @@
       font-size: 0.9rem;
     }
 
+    .login-footer {
+      background: #1f3f6f;
+      color: #ffffff;
+      flex-shrink: 0;
+      margin-top: -36px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .login-footer strong {
+      color: #ffffff;
+    }
+
     @media (max-width: 991.98px) {
       .login-layout {
         grid-template-columns: 1fr;
         gap: 34px;
-        padding: 34px 22px;
-        transform: none;
+        padding: 34px 22px 12px;
+        min-height: auto;
       }
 
       .brand-panel {
@@ -242,11 +346,26 @@
 
 <body class="hold-transition layout-top-nav">
 <div class="wrapper">
-  <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
+  <div class="social-topbar">
+    <div class="container">
+      <div class="social-topbar-inner">
+        <a href="https://wa.me/6282134054713" class="social-topbar-link" aria-label="WhatsApp" target="_blank" rel="noopener noreferrer">
+          <i class="fas fa-phone-alt"></i>
+        </a>
+        <a href="mailto:marketing@primantaraindo.com" class="social-topbar-link" aria-label="Email">
+          <i class="fas fa-envelope"></i>
+        </a>
+        <a href="https://share.google/2aq90s8Y9LbSo5w2j" class="social-topbar-link" aria-label="Alamat" target="_blank" rel="noopener noreferrer">
+          <i class="fas fa-map-marker-alt"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <nav class="main-header navbar navbar-expand-md navbar-light navbar-white landing-navbar">
     <div class="container">
       <a href="{{ route('landing') }}" class="navbar-brand">
-        <img src="{{ asset('adminlte/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">AdminLTE 3</span>
+        <img src="{{ asset('images/Logo/Primary-Logo-12-2048x615.png') }}" alt="Primantara Indo" class="public-brand-logo">
       </a>
 
       <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -260,9 +379,6 @@
           </li>
           <li class="nav-item">
             <a href="{{ route('about') }}" class="nav-link">About</a>
-          </li>
-          <li class="nav-item">
-            <a href="{{ route('login') }}" class="nav-link active">Login</a>
           </li>
         </ul>
       </div>
@@ -280,11 +396,13 @@
 
   <div class="card card-outline card-primary login-card">
     <div class="card-header text-center">
-      <a href="#" class="h1"><b>Admin</b>LTE</a>
+      <a href="{{ route('landing') }}" class="login-card-logo">
+        <img src="{{ asset('images/Logo/Primary-Logo-12-2048x615.png') }}" alt="Primantara Indo">
+      </a>
     </div>
 
     <div class="card-body">
-      <p class="login-box-msg">Sign in to start your session</p>
+      <p class="login-box-msg">Masuk untuk memulai sesi Anda</p>
 
       <form action="{{ route('login.process') }}" method="POST">
         @csrf
@@ -344,7 +462,7 @@
 
   </div>
 
-  <footer class="main-footer text-center">
+  <footer class="main-footer text-center login-footer">
     <strong>Copyright &copy; 2026 PT Primantara Nusa Samasta.</strong>
   </footer>
 </div>
@@ -368,30 +486,6 @@ Swal.fire({
   customClass: {
     popup: 'swal-small'
   }
-});
-</script>
-@endif
-
-{{-- LOGIN BERHASIL --}}
-@if(session('login_success'))
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  Swal.fire({
-    icon: 'success',
-    title: 'Login Berhasil',
-    text: 'Selamat Datang',
-    width: '20rem',
-    showConfirmButton: false,
-    timer: 3000,
-    timerProgressBar: true,
-    allowOutsideClick: false,
-    allowEscapeKey: false,
-    customClass: {
-      popup: 'swal-small'
-    }
-  }).then(() => {
-    window.location.href = "{{ route('dashboard') }}";
-  });
 });
 </script>
 @endif

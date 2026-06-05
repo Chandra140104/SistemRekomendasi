@@ -11,6 +11,10 @@
   <link rel="stylesheet" href="{{ asset('adminlte/dist/css/adminlte.min.css') }}">
 
   <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
     body.layout-top-nav {
       background: linear-gradient(135deg, #eef3f6 0%, #dfe7ec 100%);
       min-height: 100vh;
@@ -20,6 +24,68 @@
       background: transparent;
       min-height: calc(100vh - 57px);
       margin-left: 0 !important;
+    }
+
+    .social-topbar {
+      background: #ed5d17;
+      padding: 8px 0;
+    }
+
+    .social-topbar-inner {
+      align-items: center;
+      display: flex;
+      gap: 14px;
+    }
+
+    .social-topbar-link {
+      align-items: center;
+      background: #ffffff;
+      border-radius: 50%;
+      color: #ed5d17;
+      display: inline-flex;
+      font-size: 15px;
+      height: 30px;
+      justify-content: center;
+      transition: .2s ease-in-out;
+      width: 30px;
+    }
+
+    .social-topbar-link:hover {
+      background: #ffe5d8;
+      color: #b74206;
+    }
+
+    .public-brand-logo {
+      display: block;
+      height: 34px;
+      max-width: 220px;
+      object-fit: contain;
+      width: auto;
+    }
+
+    .landing-navbar .navbar-nav {
+      column-gap: 26px;
+    }
+
+    .landing-navbar .navbar-brand {
+      margin-right: 2.5rem;
+    }
+
+    .landing-navbar {
+      padding-bottom: 0.8rem;
+      padding-top: 0.8rem;
+    }
+
+    .landing-navbar .nav-link {
+      color: #1f3f6f !important;
+      font-weight: 600;
+      padding-left: 0.9rem;
+      padding-right: 0.9rem;
+    }
+
+    .landing-navbar .nav-link:hover,
+    .landing-navbar .nav-link:focus {
+      color: #163255 !important;
     }
 
     .home-hero {
@@ -37,9 +103,10 @@
       grid-template-columns: 1fr;
       margin: 0;
       max-width: none;
+      position: relative;
       width: 100%;
       min-height: calc(100vh - 114px);
-      padding: 42px 32px 24px;
+      padding: 42px 32px 124px;
       text-align: center;
     }
 
@@ -54,7 +121,7 @@
     }
 
     .brand-subtitle {
-      color: #ffd166;
+      color: #ffffff;
       font-size: clamp(20px, 2.4vw, 34px);
       font-weight: 800;
       letter-spacing: 3px;
@@ -81,6 +148,17 @@
       min-width: 150px;
     }
 
+    .hero-actions .btn-primary {
+      background-color: #1f3f6f;
+      border-color: #1f3f6f;
+    }
+
+    .hero-actions .btn-primary:hover,
+    .hero-actions .btn-primary:focus {
+      background-color: #163255;
+      border-color: #163255;
+    }
+
     .hero-actions .btn-outline-secondary {
       background: rgba(255, 255, 255, 0.12);
       border-color: rgba(255, 255, 255, 0.85);
@@ -90,6 +168,53 @@
     .hero-actions .btn-outline-secondary:hover {
       background: rgba(255, 255, 255, 0.22);
       border-color: #ffffff;
+      color: #ffffff;
+    }
+
+    .hero-highlight {
+      align-items: center;
+      backdrop-filter: blur(10px);
+      background: rgba(8, 16, 14, 0.46);
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      bottom: 0;
+      display: flex;
+      justify-content: space-between;
+      left: 0;
+      padding: 24px 42px;
+      position: absolute;
+      right: 0;
+    }
+
+    .hero-highlight-copy {
+      color: #ffffff;
+      font-family: "Source Sans Pro", sans-serif;
+      font-size: clamp(14px, 1.3vw, 17px);
+      font-weight: 600;
+      line-height: 1.4;
+      margin-right: 24px;
+      text-align: left;
+    }
+
+    .hero-highlight-copy span {
+      display: inline;
+      opacity: 0.92;
+    }
+
+    .hero-highlight-action {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      border-radius: 10px;
+      color: #ffffff;
+      font-size: 17px;
+      font-weight: 700;
+      min-width: 180px;
+      padding: 14px 24px;
+      transition: .2s ease-in-out;
+      white-space: nowrap;
+    }
+
+    .hero-highlight-action:hover {
+      background: rgba(255, 255, 255, 0.12);
       color: #ffffff;
     }
 
@@ -144,18 +269,18 @@
     }
 
     .catalog-preview-chip:hover {
-      color: #0f172a;
+      color: #1f3f6f;
     }
 
     .catalog-preview-chip.active {
       background: #ffffff;
       box-shadow: 0 6px 18px rgba(15, 23, 42, .10);
-      color: #0f172a;
+      color: #1f3f6f;
       position: relative;
     }
 
     .catalog-preview-chip.active::after {
-      background: #0f172a;
+      background: #ed5d17;
       border-radius: 999px;
       bottom: 8px;
       content: "";
@@ -287,6 +412,15 @@
       margin-top: 14px;
     }
 
+    .landing-footer {
+      background: #1f3f6f;
+      color: #ffffff;
+    }
+
+    .landing-footer strong {
+      color: #ffffff;
+    }
+
     @media (max-width: 991.98px) {
       .home-hero {
         padding: 34px 22px 24px;
@@ -304,6 +438,17 @@
 
       .catalog-preview-bar {
         padding-bottom: 12px;
+      }
+
+      .hero-highlight {
+        flex-direction: column;
+        gap: 18px;
+        padding: 20px 22px;
+      }
+
+      .hero-highlight-copy {
+        margin-right: 0;
+        text-align: center;
       }
 
       .catalog-product-grid {
@@ -332,11 +477,26 @@
 
 <body class="hold-transition layout-top-nav">
 <div class="wrapper">
-  <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
+  <div class="social-topbar">
+    <div class="container">
+      <div class="social-topbar-inner">
+        <a href="https://wa.me/6282134054713" class="social-topbar-link" aria-label="WhatsApp" target="_blank" rel="noopener noreferrer">
+          <i class="fas fa-phone-alt"></i>
+        </a>
+        <a href="mailto:marketing@primantaraindo.com" class="social-topbar-link" aria-label="Email">
+          <i class="fas fa-envelope"></i>
+        </a>
+        <a href="https://share.google/2aq90s8Y9LbSo5w2j" class="social-topbar-link" aria-label="Alamat" target="_blank" rel="noopener noreferrer">
+          <i class="fas fa-map-marker-alt"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <nav class="main-header navbar navbar-expand-md navbar-light navbar-white landing-navbar">
     <div class="container">
       <a href="{{ route('landing') }}" class="navbar-brand">
-        <img src="{{ asset('adminlte/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">AdminLTE 3</span>
+        <img src="{{ asset('images/Logo/Primary-Logo-12-2048x615.png') }}" alt="Primantara Indo" class="public-brand-logo">
       </a>
 
       <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -351,8 +511,13 @@
           <li class="nav-item">
             <a href="{{ route('about') }}" class="nav-link">About</a>
           </li>
+        </ul>
+
+        <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a href="{{ route('login') }}" class="nav-link">Login</a>
+            <a href="{{ route('login') }}" class="nav-link">
+              <i class="fas fa-sign-in-alt mr-1"></i>Login
+            </a>
           </li>
         </ul>
       </div>
@@ -372,9 +537,16 @@
           <a href="{{ route('product') }}" class="btn btn-outline-secondary">Penjelasan Produk</a>
         </div>
       </div>
+
+      <div class="hero-highlight">
+        <div class="hero-highlight-copy">
+          <span>Temukan produk cat yang paling sesuai dengan kebutuhanmu</span>
+        </div>
+        <a href="#katalog-cat" class="btn hero-highlight-action">Lihat Produk</a>
+      </div>
     </section>
 
-    <section class="catalog-preview">
+    <section class="catalog-preview" id="katalog-cat">
       <div class="catalog-preview-bar">
         <button type="button" class="catalog-preview-chip active" data-filter="Semua">Semua</button>
         @foreach ($kategoriLanding as $kategori)
@@ -387,7 +559,7 @@
         <input type="text"
                class="catalog-search-input"
                id="catalogSearchInput"
-               placeholder="Cari kategori atau produk cat...">
+               placeholder="Cari produk cat">
       </div>
 
       <div class="catalog-preview-meta">{{ $totalProdukLanding }} produk</div>
@@ -429,7 +601,7 @@
 
   </div>
 
-  <footer class="main-footer text-center">
+  <footer class="main-footer text-center landing-footer">
     <strong>Copyright &copy; 2026 PT Primantara Nusa Samasta.</strong>
   </footer>
 </div>
