@@ -86,6 +86,51 @@
       width: auto;
     }
 
+    .main-header .nav-link {
+      color: #1f3f6f !important;
+      font-weight: 600;
+    }
+
+    .main-header .dropdown-menu {
+      border-radius: 8px;
+      margin-top: 0;
+      min-width: 240px;
+    }
+
+    .main-header .dropdown-item {
+      color: #1f3f6f;
+      font-weight: 600;
+      padding: 0.65rem 1rem;
+    }
+
+    .main-header .dropdown-item:hover,
+    .main-header .dropdown-item:focus {
+      background-color: #1f3f6f;
+      color: #ffffff;
+    }
+
+    @media (min-width: 992px) {
+      .main-header .dropdown > .dropdown-menu {
+        display: none;
+      }
+
+      .main-header .dropdown:hover > .dropdown-menu {
+        display: block;
+      }
+
+      .main-header .dropdown.show > .dropdown-menu {
+        display: none;
+      }
+
+      .main-header .dropdown.show:hover > .dropdown-menu {
+        display: block;
+      }
+
+      .main-header .dropdown:hover > .nav-link {
+        color: #163255 !important;
+      }
+    }
+
     .recommendation-flow {
       margin-top: 32px;
       padding: 0 12px;
@@ -242,14 +287,29 @@
 
       <div class="collapse navbar-collapse order-3" id="navbarCollapse">
         <ul class="navbar-nav">
-          <li class="nav-item">
-            <a href="{{ route('product') }}" class="nav-link">Product</a>
+          <li class="nav-item dropdown">
+            <a id="productDropdown" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Product</a>
+            <div aria-labelledby="productDropdown" class="dropdown-menu border-0 shadow">
+              <a href="{{ route('penjelasan-kategori-produk') }}" class="dropdown-item">Penjelasan kategori produk</a>
+              <a href="{{ route('penjelasan-sub-kategori') }}" class="dropdown-item">Penjelasan sub kategori</a>
+              <a href="{{ route('landing') }}#katalog-cat" class="dropdown-item">Katalog produk</a>
+            </div>
           </li>
-          <li class="nav-item">
-            <a href="{{ route('about') }}" class="nav-link active">About</a>
+          <li class="nav-item dropdown">
+            <a id="aboutDropdown" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle active">About</a>
+            <div aria-labelledby="aboutDropdown" class="dropdown-menu border-0 shadow">
+              <a href="{{ route('about') }}#penjelasan-sistem-rekomendasi" class="dropdown-item">Penjelasan sistem rekomendasi</a>
+              <a href="{{ route('about') }}#content-based-filtering" class="dropdown-item">Metode content-based filtering</a>
+              <a href="{{ route('about') }}#alur-sistem" class="dropdown-item">Alur sistem</a>
+            </div>
           </li>
+        </ul>
+
+        <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a href="{{ route('login') }}" class="nav-link">Login</a>
+            <a href="{{ route('login') }}" class="nav-link">
+              <i class="fas fa-sign-in-alt mr-1"></i>Login
+            </a>
           </li>
         </ul>
       </div>
@@ -263,12 +323,12 @@
         <p>PT Primantara Nusa Samasta</p>
       </div>
 
-      <div class="about-card">
+      <div class="about-card" id="penjelasan-sistem-rekomendasi">
         <h2>About</h2>
 
         <p>Website ini merupakan platform berbasis web yang dirancang untuk membantu pengguna dalam menemukan produk cat yang sesuai dengan kebutuhan dan preferensi mereka. Di tengah banyaknya pilihan produk cat dengan berbagai kategori, fungsi, dan keunggulan, pengguna sering kali mengalami kesulitan dalam menentukan produk yang paling tepat. Oleh karena itu, website ini hadir sebagai solusi yang mampu memberikan rekomendasi produk secara lebih terarah dan efisien.</p>
 
-        <p>Sistem yang dikembangkan dalam website ini menggunakan metode content-based filtering, yaitu sebuah pendekatan yang memberikan rekomendasi berdasarkan kesamaan karakteristik atau atribut dari suatu produk. Atribut yang digunakan meliputi kategori produk, sub kategori, lokasi penggunaan, serta kebutuhan dari masing-masing produk cat. Dengan memanfaatkan informasi tersebut, sistem akan menganalisis kebutuhan pengguna dan mencocokkannya dengan produk yang tersedia, sehingga menghasilkan rekomendasi yang relevan dan sesuai.</p>
+        <p id="content-based-filtering">Sistem yang dikembangkan dalam website ini menggunakan metode content-based filtering, yaitu sebuah pendekatan yang memberikan rekomendasi berdasarkan kesamaan karakteristik atau atribut dari suatu produk. Atribut yang digunakan meliputi kategori produk, sub kategori, lokasi penggunaan, serta kebutuhan dari masing-masing produk cat. Dengan memanfaatkan informasi tersebut, sistem akan menganalisis kebutuhan pengguna dan mencocokkannya dengan produk yang tersedia, sehingga menghasilkan rekomendasi yang relevan dan sesuai.</p>
 
         <p>Selain itu, proses perhitungan kemiripan antar produk dilakukan menggunakan metode Dice Similarity Coefficient, yang memungkinkan sistem untuk menentukan tingkat kesesuaian antara input pengguna dengan data produk secara lebih akurat. Hasil dari perhitungan tersebut kemudian diurutkan sehingga pengguna dapat melihat produk dengan tingkat kecocokan tertinggi sebagai rekomendasi utama.</p>
 
@@ -277,7 +337,7 @@
         <p>Melalui pengembangan website ini, diharapkan dapat memberikan manfaat baik bagi pengguna maupun pihak perusahaan, khususnya dalam mendukung proses pemasaran dan pengambilan keputusan yang lebih efektif. Website ini juga menjadi bentuk implementasi teknologi sistem rekomendasi dalam bidang industri cat yang dapat dikembangkan lebih lanjut di masa mendatang.</p>
       </div>
 
-      <section class="recommendation-flow">
+      <section class="recommendation-flow" id="alur-sistem">
         <h2 class="flow-title">Alur Sistem Rekomendasi</h2>
 
         <div class="flow-timeline">

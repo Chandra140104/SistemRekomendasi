@@ -6,13 +6,20 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\LokasiPenggunaanController;
 use App\Http\Controllers\LevelController;
+use App\Http\Controllers\KebutuhanController;
+use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\RekomendasiController;
+use App\Http\Controllers\SubKategoriController;
 use App\Http\Controllers\UserController;
 use App\Models\InputRekomendasi;
 use App\Models\Kategori;
+use App\Models\Kebutuhan;
+use App\Models\LokasiPenggunaan;
 use App\Models\Produk;
+use App\Models\SubKategori;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +29,12 @@ use App\Models\Produk;
 
 // Landing page
 Route::get('/', function () {
-    $produkLanding = Produk::with('kategori')
+    $produkLanding = Produk::with([
+        'kategori',
+        'subKategori',
+        'lokasiPenggunaan',
+        'kebutuhan',
+    ])
         ->orderBy('nama')
         ->get();
 
@@ -50,6 +62,14 @@ Route::get('/about', function () {
     return view('login.about');
 })->name('about');
 
+Route::get('/penjelasan-kategori-produk/', function () {
+    return view('login.product');
+})->name('penjelasan-kategori-produk');
+
+Route::get('/penjelasan-sub-kategori', function () {
+    return view('login.product');
+})->name('penjelasan-sub-kategori');
+
 Route::get('/product', function () {
     return view('login.product');
 })->name('product');
@@ -63,9 +83,18 @@ Route::post('/logout', [AuthController::class, 'logout'])
     ->name('logout');
 
 // Forgot password
-Route::get('/forgot-password', function () {
-    return view('login.forgot-password');
-})->name('password.request');
+Route::get('/forgot-password', [PasswordResetController::class, 'showLinkRequestForm'])
+    ->middleware('guest')
+    ->name('password.request');
+Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail'])
+    ->middleware('guest')
+    ->name('password.email');
+Route::get('/reset-password/{token}', [PasswordResetController::class, 'showResetForm'])
+    ->middleware('guest')
+    ->name('password.reset');
+Route::post('/reset-password', [PasswordResetController::class, 'reset'])
+    ->middleware('guest')
+    ->name('password.update');
 
 // Register page
 Route::get('/register', function () {
@@ -123,35 +152,16 @@ Route::middleware('auth')->group(function () {
         $threshold = 0.5;
         $totalProduk = Produk::count();
         $totalKategori = Kategori::count();
-        $produkList = Produk::with('kategori')->get();
+        $produkList = Produk::with([
+            'kategori',
+            'subKategori',
+            'lokasiPenggunaan',
+            'kebutuhan',
+        ])->get();
         $riwayatInput = InputRekomendasi::all();
-
-        $totalSubKategori = Produk::query()
-            ->whereNotNull('sub_kategori')
-            ->pluck('sub_kategori')
-            ->map(fn ($item) => array_map('trim', explode(',', $item)))
-            ->flatten()
-            ->filter()
-            ->unique()
-            ->count();
-
-        $totalLokasiPenggunaan = Produk::query()
-            ->whereNotNull('lokasi_penggunaan')
-            ->pluck('lokasi_penggunaan')
-            ->map(fn ($item) => array_map('trim', explode(',', $item)))
-            ->flatten()
-            ->filter()
-            ->unique()
-            ->count();
-
-        $totalKebutuhan = Produk::query()
-            ->whereNotNull('kelebihan')
-            ->pluck('kelebihan')
-            ->map(fn ($item) => array_map('trim', explode(',', $item)))
-            ->flatten()
-            ->filter()
-            ->unique()
-            ->count();
+        $totalSubKategori = SubKategori::count();
+        $totalLokasiPenggunaan = LokasiPenggunaan::count();
+        $totalKebutuhan = Kebutuhan::count();
 
         $normalizeValues = function (?string $value): array {
             if (! $value) {
@@ -273,10 +283,6 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile', [UserController::class, 'updateProfile'])
         ->name('profile.update');
 
-    Route::get('/katalog', [ProdukController::class, 'catalog'])
-        ->name('katalog.index');
-
-
     Route::middleware('role:ADM')->group(function () {
 
     /*
@@ -288,6 +294,9 @@ Route::middleware('auth')->group(function () {
 
 
     Route::resource('kategori', KategoriController::class);
+    Route::resource('sub-kategori', SubKategoriController::class);
+    Route::resource('lokasi-penggunaan', LokasiPenggunaanController::class);
+    Route::resource('kebutuhan', KebutuhanController::class);
 
     /*
     |--------------------------------------------------------------------------
@@ -304,6 +313,9 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::middleware('role:USR')->group(function () {
+        Route::get('/katalog', [ProdukController::class, 'catalog'])
+            ->name('katalog.index');
+
         Route::get('/rekomendasi', [RekomendasiController::class, 'index'])
             ->name('rekomendasi.index');
 

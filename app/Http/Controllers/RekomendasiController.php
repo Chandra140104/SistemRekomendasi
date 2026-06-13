@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Kategori;
-use App\Models\Produk;
 use App\Models\InputRekomendasi;
+use App\Models\Kategori;
+use App\Models\Kebutuhan;
+use App\Models\LokasiPenggunaan;
+use App\Models\Produk;
+use App\Models\SubKategori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,31 +15,20 @@ class RekomendasiController extends Controller
 {
     private const THRESHOLD = 0.5;
 
-    /**
-     * ===============================
-     * HALAMAN AWAL
-     * ===============================
-     */
     public function index()
     {
         return view('rekomendasi.index', [
             'riwayat' => null,
             'riwayatList' => collect(),
-            'hasil'   => null,
+            'hasil' => null,
             'hasSubmitted' => false,
             'threshold' => self::THRESHOLD,
             ...$this->getFormOptions(),
         ]);
     }
 
-    /**
-     * ===============================
-     * PROSES REKOMENDASI (CBF ATTRIBUTE-BASED)
-     * ===============================
-     */
     public function store(Request $request)
     {
-        // ================= VALIDASI =================
         $data = $request->validate([
             'kategori' => 'required',
             'sub_kategori' => 'required',
@@ -44,7 +36,6 @@ class RekomendasiController extends Controller
             'kelebihan' => 'required|array|min:1',
         ]);
 
-        // ================= SIMPAN INPUT USER =================
         InputRekomendasi::create([
             'id_user' => Auth::id(),
             'kategori' => $data['kategori'],
@@ -55,7 +46,6 @@ class RekomendasiController extends Controller
 
         $riwayatList = $this->getRiwayatList();
         $riwayat = $riwayatList->first();
-
         $hasil = $this->calculateRecommendations($data);
 
         return view('rekomendasi.index', [
@@ -106,56 +96,23 @@ class RekomendasiController extends Controller
 
     private function getFormOptions(): array
     {
-        $kategoriOptions = Kategori::orderBy('nama')
-            ->pluck('nama')
-            ->values()
-            ->all();
-
-        $subKategoriOptions = Produk::query()
-            ->whereNotNull('sub_kategori')
-            ->pluck('sub_kategori')
-            ->map(fn ($item) => array_map('trim', explode(',', $item)))
-            ->flatten()
-            ->filter()
-            ->unique()
-            ->sort()
-            ->values()
-            ->all();
-
-        $lokasiOptions = Produk::query()
-            ->whereNotNull('lokasi_penggunaan')
-            ->pluck('lokasi_penggunaan')
-            ->map(fn ($item) => array_map('trim', explode(',', $item)))
-            ->flatten()
-            ->filter()
-            ->unique()
-            ->sort()
-            ->values()
-            ->all();
-
-        $kelebihanOptions = Produk::query()
-            ->whereNotNull('kelebihan')
-            ->pluck('kelebihan')
-            ->map(fn ($item) => array_map('trim', explode(',', $item)))
-            ->flatten()
-            ->filter()
-            ->unique()
-            ->sort()
-            ->values()
-            ->all();
-
         return [
-            'kategoriOptions' => $kategoriOptions,
-            'subKategoriOptions' => $subKategoriOptions,
-            'lokasiOptions' => $lokasiOptions,
-            'kelebihanOptions' => $kelebihanOptions,
+            'kategoriOptions' => Kategori::orderBy('nama')->pluck('nama')->values()->all(),
+            'subKategoriOptions' => SubKategori::orderBy('nama')->pluck('nama')->values()->all(),
+            'lokasiOptions' => LokasiPenggunaan::orderBy('nama')->pluck('nama')->values()->all(),
+            'kelebihanOptions' => Kebutuhan::orderBy('nama')->pluck('nama')->values()->all(),
         ];
     }
 
     private function calculateRecommendations(array $data): array
     {
         $hasil = [];
-        $produkList = Produk::with('kategori')->get();
+        $produkList = Produk::with([
+            'kategori',
+            'subKategori',
+            'lokasiPenggunaan',
+            'kebutuhan',
+        ])->get();
         $userKeywords = $this->buildUserKeywords($data);
 
         foreach ($produkList as $produk) {
@@ -190,7 +147,7 @@ class RekomendasiController extends Controller
         }
 
         return collect(explode(',', $value))
-            ->map(fn ($item) => trim($item))
+            ->map(fn ($item) => trim((string) $item))
             ->filter()
             ->values()
             ->all();
@@ -215,9 +172,9 @@ class RekomendasiController extends Controller
     {
         return collect([
             $produk->kategori->nama ?? null,
-            ...$this->normalizeSetValues($produk->sub_kategori),
-            ...$this->normalizeSetValues($produk->lokasi_penggunaan),
-            ...$this->normalizeSetValues($produk->kelebihan),
+            ...$produk->sub_kategori_labels,
+            ...$produk->lokasi_penggunaan_labels,
+            ...$produk->kebutuhan_labels,
         ])
             ->map(fn ($item) => trim((string) $item))
             ->filter()

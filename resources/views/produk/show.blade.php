@@ -24,9 +24,11 @@
       <tr>
         <th>Sub Kategori</th>
         <td>
-          @foreach(explode(',', $produk->sub_kategori) as $sub)
-            <span class="badge badge-primary">{{ $sub }}</span>
-          @endforeach
+          @forelse ($produk->sub_kategori_labels as $item)
+            <span class="badge badge-primary mr-1">{{ $item }}</span>
+          @empty
+            -
+          @endforelse
         </td>
       </tr>
 
@@ -34,9 +36,11 @@
       <tr>
         <th>Lokasi Penggunaan</th>
         <td>
-          @foreach(explode(',', $produk->lokasi_penggunaan) as $lokasi)
-            <span class="badge badge-info">{{ $lokasi }}</span>
-          @endforeach
+          @forelse ($produk->lokasi_penggunaan_labels as $item)
+            <span class="badge badge-info mr-1">{{ $item }}</span>
+          @empty
+            -
+          @endforelse
         </td>
       </tr>
 
@@ -44,9 +48,11 @@
       <tr>
         <th>Kebutuhan</th>
         <td>
-          @foreach(explode(',', $produk->kelebihan) as $k)
-            <span class="badge badge-success">{{ $k }}</span>
-          @endforeach
+          @forelse ($produk->kebutuhan_labels as $item)
+            <span class="badge badge-success mr-1">{{ $item }}</span>
+          @empty
+            -
+          @endforelse
         </td>
       </tr>
 

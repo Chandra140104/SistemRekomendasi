@@ -24,6 +24,16 @@
     <section class="content">
       <div class="container-fluid">
 
+        @if($errors->any())
+        <div class="alert alert-danger">
+          <ul class="mb-0 pl-3">
+            @foreach($errors->all() as $error)
+              <li>{{ $error }}</li>
+            @endforeach
+          </ul>
+        </div>
+        @endif
+
         <div class="card card-warning">
           <div class="card-header">
             <h3 class="card-title">Form Edit Produk</h3>
@@ -34,21 +44,24 @@
             @method('PUT')
 
             <div class="card-body">
+              @php
+                $selectedSubKategori = collect(old('sub_kategori', $produk->subKategori->pluck('id_sub_kategori')->all()))->map(fn ($id) => (string) $id)->all();
+                $selectedLokasi = collect(old('lokasi_penggunaan', $produk->lokasiPenggunaan->pluck('id_lokasi_penggunaan')->all()))->map(fn ($id) => (string) $id)->all();
+                $selectedKebutuhan = collect(old('kelebihan', $produk->kebutuhan->pluck('id_kebutuhan')->all()))->map(fn ($id) => (string) $id)->all();
+              @endphp
 
               <div class="form-group">
                 <label>Nama Produk</label>
-                <input type="text" name="nama" class="form-control"
-                       value="{{ $produk->nama }}" required>
+                <input type="text" name="nama" class="form-control" value="{{ old('nama', $produk->nama) }}" required>
               </div>
 
               <div class="form-group">
                 <label>Kategori</label>
                 <select name="id_kategori" class="form-control" required>
                   <option value="">-- Pilih Kategori --</option>
-                  @foreach($kategori as $kat)
-                    <option value="{{ $kat->id_kategori }}"
-                      {{ $produk->id_kategori == $kat->id_kategori ? 'selected' : '' }}>
-                      {{ $kat->nama }}
+                  @foreach($kategori as $item)
+                    <option value="{{ $item->id_kategori }}" {{ (string) old('id_kategori', $produk->id_kategori) === (string) $item->id_kategori ? 'selected' : '' }}>
+                      {{ $item->nama }}
                     </option>
                   @endforeach
                 </select>
@@ -57,56 +70,41 @@
               <div class="form-group">
                 <label>Sub Kategori</label>
                 <div class="row">
-                  @php
-                    $subKategoriList = [
-                      'Mortar',
-                      'Primer 1st',
-                      'Primer 2nd',
-                      'Finish 3rd',
-                      'FInish Matte 3rd',
-                      'Finish Gloss 3rd',
-                      'Protect 3rd'
-                    ];
-                  @endphp
-
-                  @foreach($subKategoriList as $sub)
-                  <div class="col-md-4">
-                    <div class="form-check">
-                      <input class="form-check-input"
-                             type="checkbox"
-                             name="sub_kategori[]"
-                             value="{{ $sub }}"
-                             id="sub-{{ \Illuminate\Support\Str::slug($sub) }}"
-                             {{ in_array($sub, $produk->sub_kategori) ? 'checked' : '' }}>
-                      <label class="form-check-label" for="sub-{{ \Illuminate\Support\Str::slug($sub) }}">{{ $sub }}</label>
+                  @foreach($subKategoriOptions as $item)
+                    <div class="col-md-4">
+                      <div class="form-check mb-2">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               name="sub_kategori[]"
+                               value="{{ $item->id_sub_kategori }}"
+                               id="sub-kategori-{{ $item->id_sub_kategori }}"
+                               {{ in_array((string) $item->id_sub_kategori, $selectedSubKategori, true) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="sub-kategori-{{ $item->id_sub_kategori }}">
+                          {{ $item->nama }}
+                        </label>
+                      </div>
                     </div>
-                  </div>
                   @endforeach
                 </div>
               </div>
 
               <div class="form-group">
-                <label>Lokasi Penggunaan (Bisa lebih dari satu)</label>
+                <label>Lokasi Penggunaan</label>
                 <div class="row">
-                  @php
-                    $lokasi = [
-                      'Besi Indoor','Besi Outdoor','Beton Indoor','Beton Outdoor',
-                      'Lantai Kering','Lantai Basah','Dalam Air'
-                    ];
-                  @endphp
-
-                  @foreach($lokasi as $l)
-                  <div class="col-md-3">
-                    <div class="form-check">
-                      <input class="form-check-input"
-                             type="checkbox"
-                             name="lokasi_penggunaan[]"
-                             value="{{ $l }}"
-                             id="lokasi-{{ \Illuminate\Support\Str::slug($l) }}"
-                             {{ in_array($l, $produk->lokasi_penggunaan) ? 'checked' : '' }}>
-                      <label class="form-check-label" for="lokasi-{{ \Illuminate\Support\Str::slug($l) }}">{{ $l }}</label>
+                  @foreach($lokasiOptions as $item)
+                    <div class="col-md-4">
+                      <div class="form-check mb-2">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               name="lokasi_penggunaan[]"
+                               value="{{ $item->id_lokasi_penggunaan }}"
+                               id="lokasi-{{ $item->id_lokasi_penggunaan }}"
+                               {{ in_array((string) $item->id_lokasi_penggunaan, $selectedLokasi, true) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="lokasi-{{ $item->id_lokasi_penggunaan }}">
+                          {{ $item->nama }}
+                        </label>
+                      </div>
                     </div>
-                  </div>
                   @endforeach
                 </div>
               </div>
@@ -114,39 +112,23 @@
               <div class="form-group">
                 <label>Kebutuhan</label>
                 <div class="row">
-                  @php
-                    $kelebihanList = [
-                      'Tahan Kimia',
-                      'Tahan Gesekan',
-                      'Cepat Kering',
-                      'Tahan Karat',
-                      'Tahan Abrasi',
-                      'Tahan Panas',
-                      'Tahan Sinar Matahari',
-                      'Tahan Cuaca',
-                      'Viskositas Rendah',
-                      'Tidak Bau Tajam',
-                      'Bawah Kapal',
-                      'Anti Static'
-                    ];
-                  @endphp
-
-                  @foreach($kelebihanList as $kelebihan)
-                  <div class="col-md-4">
-                    <div class="form-check">
-                      <input class="form-check-input"
-                             type="checkbox"
-                             name="kelebihan[]"
-                             value="{{ $kelebihan }}"
-                             id="kelebihan-{{ \Illuminate\Support\Str::slug($kelebihan) }}"
-                             {{ in_array($kelebihan, $produk->kelebihan) ? 'checked' : '' }}>
-                      <label class="form-check-label" for="kelebihan-{{ \Illuminate\Support\Str::slug($kelebihan) }}">{{ $kelebihan }}</label>
+                  @foreach($kebutuhanOptions as $item)
+                    <div class="col-md-4">
+                      <div class="form-check mb-2">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               name="kelebihan[]"
+                               value="{{ $item->id_kebutuhan }}"
+                               id="kebutuhan-{{ $item->id_kebutuhan }}"
+                               {{ in_array((string) $item->id_kebutuhan, $selectedKebutuhan, true) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="kebutuhan-{{ $item->id_kebutuhan }}">
+                          {{ $item->nama }}
+                        </label>
+                      </div>
                     </div>
-                  </div>
                   @endforeach
                 </div>
               </div>
-
             </div>
 
             <div class="card-footer">
@@ -172,7 +154,7 @@
   </footer>
 </div>
 
-<script src="{{ asset('adminlte/plugins/jquery/jquery.min.js') }}"></cript>
+<script src="{{ asset('adminlte/plugins/jquery/jquery.min.js') }}"></script>
 <script src="{{ asset('adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('adminlte/dist/js/adminlte.min.js') }}"></script>
 

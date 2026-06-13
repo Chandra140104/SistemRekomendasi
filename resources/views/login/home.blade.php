@@ -88,6 +88,38 @@
       color: #163255 !important;
     }
 
+    .landing-navbar .dropdown-menu {
+      border-radius: 8px;
+      margin-top: 0;
+      min-width: 240px;
+    }
+
+    .landing-navbar .dropdown-item {
+      color: #1f3f6f;
+      font-weight: 600;
+      padding: 0.65rem 1rem;
+    }
+
+    .landing-navbar .dropdown-item:hover,
+    .landing-navbar .dropdown-item:focus {
+      background-color: #1f3f6f;
+      color: #ffffff;
+    }
+
+    @media (min-width: 992px) {
+      .landing-navbar .dropdown > .dropdown-menu {
+        display: none;
+      }
+
+      .landing-navbar .dropdown:hover > .dropdown-menu {
+        display: block;
+      }
+
+      .landing-navbar .dropdown:hover > .nav-link {
+        color: #163255 !important;
+      }
+    }
+
     .home-hero {
       align-items: center;
       background-image:
@@ -505,11 +537,21 @@
 
       <div class="collapse navbar-collapse order-3" id="navbarCollapse">
         <ul class="navbar-nav">
-          <li class="nav-item">
-            <a href="{{ route('product') }}" class="nav-link">Product</a>
+          <li class="nav-item dropdown">
+            <a id="productDropdown" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Product</a>
+            <div aria-labelledby="productDropdown" class="dropdown-menu border-0 shadow">
+              <a href="{{ route('penjelasan-kategori-produk') }}" class="dropdown-item">Penjelasan kategori produk</a>
+              <a href="{{ route('penjelasan-sub-kategori') }}" class="dropdown-item">Penjelasan sub kategori</a>
+              <a href="{{ route('landing') }}#katalog-cat" class="dropdown-item">Katalog produk</a>
+            </div>
           </li>
-          <li class="nav-item">
-            <a href="{{ route('about') }}" class="nav-link">About</a>
+          <li class="nav-item dropdown">
+            <a id="aboutDropdown" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">About</a>
+            <div aria-labelledby="aboutDropdown" class="dropdown-menu border-0 shadow">
+              <a href="{{ route('about') }}#penjelasan-sistem-rekomendasi" class="dropdown-item">Penjelasan sistem rekomendasi</a>
+              <a href="{{ route('about') }}#content-based-filtering" class="dropdown-item">Metode content-based filtering</a>
+              <a href="{{ route('about') }}#alur-sistem" class="dropdown-item">Alur sistem</a>
+            </div>
           </li>
         </ul>
 
@@ -533,8 +575,8 @@
           Sitem rekomendasi produk cat metode Content-Based Filtering untuk membantu menemukan produk yang paling sesuai dengan kebutuhan.
         </p>
         <div class="hero-actions">
-          <a href="{{ route('login') }}" class="btn btn-primary">Login</a>
-          <a href="{{ route('product') }}" class="btn btn-outline-secondary">Penjelasan Produk</a>
+          <a href="{{ route('login') }}" class="btn btn-primary">Coba Gratis Sekarang</a>
+          <a href="#katalog-cat" class="btn btn-outline-secondary">Katalog Produk</a>
         </div>
       </div>
 
@@ -610,6 +652,15 @@
 <script src="{{ asset('adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('adminlte/dist/js/adminlte.min.js') }}"></script>
 <script>
+  document.querySelectorAll('.landing-navbar .dropdown-toggle').forEach((toggle) => {
+    toggle.addEventListener('click', (event) => {
+      if (window.innerWidth >= 992) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    });
+  });
+
   document.addEventListener('DOMContentLoaded', function () {
     const filterButtons = Array.from(document.querySelectorAll('.catalog-preview-chip'));
     const productCards = Array.from(document.querySelectorAll('.catalog-product-card'));

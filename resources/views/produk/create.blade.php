@@ -24,6 +24,16 @@
 <section class="content">
 <div class="container-fluid">
 
+@if($errors->any())
+<div class="alert alert-danger">
+  <ul class="mb-0 pl-3">
+    @foreach($errors->all() as $error)
+      <li>{{ $error }}</li>
+    @endforeach
+  </ul>
+</div>
+@endif
+
 <div class="card card-primary">
   <div class="card-header">
     <h3 class="card-title">Form Tambah Produk</h3>
@@ -33,81 +43,92 @@
     @csrf
 
     <div class="card-body">
-
-      <!-- Nama -->
       <div class="form-group">
         <label>Nama Produk</label>
-        <input type="text" name="nama" class="form-control" required>
+        <input type="text" name="nama" class="form-control" value="{{ old('nama') }}" required>
       </div>
 
-      <!-- Kode -->
-      <div class="form-group">
-        <label>Kode Produk</label>
-        <input type="text" name="kode" class="form-control" required>
-      </div>
-
-      <!-- 🔥 FIX RELASI KATEGORI -->
       <div class="form-group">
         <label>Kategori</label>
         <select name="id_kategori" class="form-control" required>
           <option value="">-- Pilih Kategori --</option>
-
-          @foreach($kategori as $k)
-            <option value="{{ $k->id_kategori }}">{{ $k->nama }}</option>
+          @foreach($kategori as $item)
+            <option value="{{ $item->id_kategori }}" {{ old('id_kategori') == $item->id_kategori ? 'selected' : '' }}>
+              {{ $item->nama }}
+            </option>
           @endforeach
         </select>
       </div>
 
-      <!-- Sub Kategori -->
       <div class="form-group">
         <label>Sub Kategori</label>
-        <input type="text" name="sub_kategori" class="form-control" required>
+        <div class="row">
+          @foreach($subKategoriOptions as $item)
+            <div class="col-md-4">
+              <div class="form-check mb-2">
+                <input class="form-check-input"
+                       type="checkbox"
+                       name="sub_kategori[]"
+                       value="{{ $item->id_sub_kategori }}"
+                       id="sub-kategori-{{ $item->id_sub_kategori }}"
+                       {{ in_array($item->id_sub_kategori, old('sub_kategori', [])) ? 'checked' : '' }}>
+                <label class="form-check-label" for="sub-kategori-{{ $item->id_sub_kategori }}">
+                  {{ $item->nama }}
+                </label>
+              </div>
+            </div>
+          @endforeach
+        </div>
       </div>
 
-      <!-- Base -->
-      <div class="form-group">
-        <label>Base</label>
-        <select name="base" class="form-control" required>
-          <option value="">-- Pilih Base --</option>
-          <option value="Solvent Based">Solvent Based</option>
-          <option value="Water Based">Water Based</option>
-        </select>
-      </div>
-
-      <!-- Lokasi -->
       <div class="form-group">
         <label>Lokasi Penggunaan</label>
-
-        @php
-        $lokasi = ['Indoor','Outdoor','Besi','Beton','Kayu','Air'];
-        @endphp
-
-        @foreach($lokasi as $l)
-          <div class="form-check">
-            <input type="checkbox" name="lokasi_penggunaan[]" value="{{ $l }}">
-            <label>{{ $l }}</label>
-          </div>
-        @endforeach
+        <div class="row">
+          @foreach($lokasiOptions as $item)
+            <div class="col-md-4">
+              <div class="form-check mb-2">
+                <input class="form-check-input"
+                       type="checkbox"
+                       name="lokasi_penggunaan[]"
+                       value="{{ $item->id_lokasi_penggunaan }}"
+                       id="lokasi-{{ $item->id_lokasi_penggunaan }}"
+                       {{ in_array($item->id_lokasi_penggunaan, old('lokasi_penggunaan', [])) ? 'checked' : '' }}>
+                <label class="form-check-label" for="lokasi-{{ $item->id_lokasi_penggunaan }}">
+                  {{ $item->nama }}
+                </label>
+              </div>
+            </div>
+          @endforeach
+        </div>
       </div>
 
-      <!-- Fungsi -->
       <div class="form-group">
-        <label>Fungsi</label>
-        <textarea name="fungsi" class="form-control" required></textarea>
+        <label>Kebutuhan</label>
+        <div class="row">
+          @foreach($kebutuhanOptions as $item)
+            <div class="col-md-4">
+              <div class="form-check mb-2">
+                <input class="form-check-input"
+                       type="checkbox"
+                       name="kelebihan[]"
+                       value="{{ $item->id_kebutuhan }}"
+                       id="kebutuhan-{{ $item->id_kebutuhan }}"
+                       {{ in_array($item->id_kebutuhan, old('kelebihan', [])) ? 'checked' : '' }}>
+                <label class="form-check-label" for="kebutuhan-{{ $item->id_kebutuhan }}">
+                  {{ $item->nama }}
+                </label>
+              </div>
+            </div>
+          @endforeach
+        </div>
       </div>
 
     </div>
 
     <div class="card-footer">
-      <a href="{{ route('produk.index') }}" class="btn btn-secondary">
-        Kembali
-      </a>
-
-      <button type="submit" class="btn btn-primary float-right">
-        Simpan
-      </button>
+      <a href="{{ route('produk.index') }}" class="btn btn-secondary">Kembali</a>
+      <button type="submit" class="btn btn-primary float-right">Simpan</button>
     </div>
-
   </form>
 </div>
 

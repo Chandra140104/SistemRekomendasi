@@ -97,6 +97,46 @@
       color: #163255 !important;
     }
 
+    .landing-navbar .dropdown-menu {
+      border-radius: 8px;
+      margin-top: 0;
+      min-width: 240px;
+    }
+
+    .landing-navbar .dropdown-item {
+      color: #1f3f6f;
+      font-weight: 600;
+      padding: 0.65rem 1rem;
+    }
+
+    .landing-navbar .dropdown-item:hover,
+    .landing-navbar .dropdown-item:focus {
+      background-color: #1f3f6f;
+      color: #ffffff;
+    }
+
+    @media (min-width: 992px) {
+      .landing-navbar .dropdown > .dropdown-menu {
+        display: none;
+      }
+
+      .landing-navbar .dropdown:hover > .dropdown-menu {
+        display: block;
+      }
+
+      .landing-navbar .dropdown.show > .dropdown-menu {
+        display: none;
+      }
+
+      .landing-navbar .dropdown.show:hover > .dropdown-menu {
+        display: block;
+      }
+
+      .landing-navbar .dropdown:hover > .nav-link {
+        color: #163255 !important;
+      }
+    }
+
     .register-layout {
       align-items: center;
       display: grid;
@@ -288,11 +328,21 @@
 
       <div class="collapse navbar-collapse order-3" id="navbarCollapse">
         <ul class="navbar-nav">
-          <li class="nav-item">
-            <a href="{{ route('product') }}" class="nav-link">Product</a>
+          <li class="nav-item dropdown">
+            <a id="productDropdown" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Product</a>
+            <div aria-labelledby="productDropdown" class="dropdown-menu border-0 shadow">
+              <a href="{{ route('penjelasan-kategori-produk') }}" class="dropdown-item">Penjelasan kategori produk</a>
+              <a href="{{ route('penjelasan-sub-kategori') }}" class="dropdown-item">Penjelasan sub kategori</a>
+              <a href="{{ route('landing') }}#katalog-cat" class="dropdown-item">Katalog produk</a>
+            </div>
           </li>
-          <li class="nav-item">
-            <a href="{{ route('about') }}" class="nav-link">About</a>
+          <li class="nav-item dropdown">
+            <a id="aboutDropdown" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">About</a>
+            <div aria-labelledby="aboutDropdown" class="dropdown-menu border-0 shadow">
+              <a href="{{ route('about') }}#penjelasan-sistem-rekomendasi" class="dropdown-item">Penjelasan sistem rekomendasi</a>
+              <a href="{{ route('about') }}#content-based-filtering" class="dropdown-item">Metode content-based filtering</a>
+              <a href="{{ route('about') }}#alur-sistem" class="dropdown-item">Alur sistem</a>
+            </div>
           </li>
         </ul>
         <ul class="navbar-nav ml-auto">

@@ -171,6 +171,7 @@
   </li>
   @endif
 
+  @if(Auth::check() && Auth::user()->level->kode == 'USR')
   <li class="nav-item">
     <a href="{{ route('katalog.index') }}"
        class="nav-link {{ request()->routeIs('katalog.*') ? 'active' : '' }}">
@@ -179,7 +180,6 @@
     </a>
   </li>
 
-  @if(Auth::check() && Auth::user()->level->kode == 'USR')
   <li class="nav-item">
     <a href="{{ route('rekomendasi.index') }}"
        class="nav-link {{ request()->routeIs('rekomendasi.index') ? 'active' : '' }}">
@@ -199,22 +199,56 @@
   <!-- ================= ADMIN ONLY ================= -->
   @if(Auth::check() && Auth::user()->level->kode == 'ADM')
 
-  <!-- PRODUK -->
-  <li class="nav-item">
-    <a href="{{ route('produk.index') }}"
-       class="nav-link {{ request()->routeIs('produk.*') ? 'active' : '' }}">
+  <!-- PRODUK / MASTER DATA -->
+  <li class="nav-item has-treeview {{ request()->routeIs('produk.*', 'kategori.*', 'sub-kategori.*', 'lokasi-penggunaan.*', 'kebutuhan.*') ? 'menu-open' : '' }}">
+    <a href="#" class="nav-link {{ request()->routeIs('produk.*', 'kategori.*', 'sub-kategori.*', 'lokasi-penggunaan.*', 'kebutuhan.*') ? 'active' : '' }}">
       <i class="nav-icon fas fa-box"></i>
-      <p>Produk</p>
+      <p>
+        Produk
+        <i class="right fas fa-angle-left"></i>
+      </p>
     </a>
-  </li>
+    <ul class="nav nav-treeview">
+      <li class="nav-item">
+        <a href="{{ route('produk.index') }}"
+           class="nav-link {{ request()->routeIs('produk.*') ? 'active' : '' }}">
+          <i class="far fa-circle nav-icon"></i>
+          <p>Produk</p>
+        </a>
+      </li>
 
-  <!-- KATEGORI -->
-  <li class="nav-item">
-    <a href="{{ route('kategori.index') }}"
-       class="nav-link {{ request()->routeIs('kategori.*') ? 'active' : '' }}">
-      <i class="nav-icon fas fa-tags"></i>
-      <p>Kategori</p>
-    </a>
+      <li class="nav-item">
+        <a href="{{ route('kategori.index') }}"
+           class="nav-link {{ request()->routeIs('kategori.*') ? 'active' : '' }}">
+          <i class="far fa-circle nav-icon"></i>
+          <p>Kategori</p>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a href="{{ route('sub-kategori.index') }}"
+           class="nav-link {{ request()->routeIs('sub-kategori.*') ? 'active' : '' }}">
+          <i class="far fa-circle nav-icon"></i>
+          <p>Sub Kategori</p>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a href="{{ route('lokasi-penggunaan.index') }}"
+           class="nav-link {{ request()->routeIs('lokasi-penggunaan.*') ? 'active' : '' }}">
+          <i class="far fa-circle nav-icon"></i>
+          <p>Lokasi Penggunaan</p>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a href="{{ route('kebutuhan.index') }}"
+           class="nav-link {{ request()->routeIs('kebutuhan.*') ? 'active' : '' }}">
+          <i class="far fa-circle nav-icon"></i>
+          <p>Kebutuhan</p>
+        </a>
+      </li>
+    </ul>
   </li>
 
   <!-- LEVEL -->

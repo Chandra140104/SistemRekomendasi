@@ -2,22 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Produk;
 use App\Models\Kategori;
+use App\Models\Kebutuhan;
+use App\Models\LokasiPenggunaan;
+use App\Models\Produk;
+use App\Models\SubKategori;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class ProdukController extends Controller
 {
     public function index(Request $request)
     {
-        // ambil semua kategori untuk dropdown
         $kategori = Kategori::all();
 
-        // query produk + relasi
-        $query = Produk::with('kategori');
+        $query = Produk::with(['kategori', 'lokasiPenggunaan']);
 
-        // 🔥 FILTER KATEGORI
         if ($request->id_kategori) {
             $query->where('id_kategori', $request->id_kategori);
         }
@@ -29,13 +28,17 @@ class ProdukController extends Controller
 
     public function create()
     {
-        $kategori = Kategori::all();
-        return view('produk.create', compact('kategori'));
+        return view('produk.create', $this->getProductFormOptions());
     }
 
     public function catalog()
     {
-        $produkLanding = Produk::with('kategori')
+        $produkLanding = Produk::with([
+            'kategori',
+            'subKategori',
+            'lokasiPenggunaan',
+            'kebutuhan',
+        ])
             ->orderBy('nama')
             ->get();
 
@@ -56,25 +59,14 @@ class ProdukController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'nama' => 'required|string|max:100',
-            'kode' => 'required|string|max:50',
-            'id_kategori' => 'required|exists:kategori,id_kategori',
-            'sub_kategori' => 'required|string|max:50',
-            'base' => 'required|string|max:50',
-            'lokasi_penggunaan' => 'required|array',
-            'fungsi' => 'required|string',
+        $validated = $this->validateProduct($request, false);
+
+        $produk = Produk::create([
+            'nama' => $validated['nama'],
+            'id_kategori' => $validated['id_kategori'],
         ]);
 
-        Produk::create([
-            'nama' => $validated['nama'],
-            'kode' => $validated['kode'],
-            'id_kategori' => $validated['id_kategori'],
-            'sub_kategori' => $validated['sub_kategori'],
-            'base' => $validated['base'],
-            'lokasi_penggunaan' => implode(',', $validated['lokasi_penggunaan']),
-            'fungsi' => $validated['fungsi'],
-        ]);
+        $this->syncProductRelations($produk, $validated);
 
         return redirect()->route('produk.index')
             ->with('success', 'Produk berhasil ditambahkan');
@@ -82,37 +74,36 @@ class ProdukController extends Controller
 
     public function show($id)
     {
-        $produk = Produk::with('kategori')->findOrFail($id);
+        $produk = Produk::with([
+            'kategori',
+            'subKategori',
+            'lokasiPenggunaan',
+            'kebutuhan',
+        ])->findOrFail($id);
+
         return view('produk.show', compact('produk'));
     }
 
     public function edit(Produk $produk)
     {
-        $kategori = Kategori::all();
-        $produk->sub_kategori = explode(',', $produk->sub_kategori);
-        $produk->lokasi_penggunaan = explode(',', $produk->lokasi_penggunaan);
-        $produk->kelebihan = explode(',', $produk->kelebihan);
+        $produk->load(['subKategori', 'lokasiPenggunaan', 'kebutuhan']);
 
-        return view('produk.edit', compact('produk', 'kategori'));
+        return view('produk.edit', array_merge(
+            ['produk' => $produk],
+            $this->getProductFormOptions()
+        ));
     }
 
     public function update(Request $request, Produk $produk)
     {
-        $validated = $request->validate([
-            'nama' => 'required|string|max:100',
-            'id_kategori' => 'required|exists:kategori,id_kategori',
-            'sub_kategori' => 'required|array|min:1',
-            'lokasi_penggunaan' => 'required|array',
-            'kelebihan' => 'required|array|min:1',
-        ]);
+        $validated = $this->validateProduct($request, true);
 
         $produk->update([
             'nama' => $validated['nama'],
             'id_kategori' => $validated['id_kategori'],
-            'sub_kategori' => implode(',', $validated['sub_kategori']),
-            'lokasi_penggunaan' => implode(',', $validated['lokasi_penggunaan']),
-            'kelebihan' => implode(',', $validated['kelebihan']),
         ]);
+
+        $this->syncProductRelations($produk, $validated);
 
         return redirect()->route('produk.index')
             ->with('success', 'Produk berhasil diperbarui');
@@ -120,9 +111,45 @@ class ProdukController extends Controller
 
     public function destroy(Produk $produk)
     {
+        $produk->subKategori()->detach();
+        $produk->lokasiPenggunaan()->detach();
+        $produk->kebutuhan()->detach();
         $produk->delete();
 
         return redirect()->route('produk.index')
             ->with('success', 'Produk berhasil dihapus');
+    }
+
+    private function getProductFormOptions(): array
+    {
+        return [
+            'kategori' => Kategori::orderBy('nama')->get(),
+            'subKategoriOptions' => SubKategori::orderBy('nama')->get(),
+            'lokasiOptions' => LokasiPenggunaan::orderBy('nama')->get(),
+            'kebutuhanOptions' => Kebutuhan::orderBy('nama')->get(),
+        ];
+    }
+
+    private function validateProduct(Request $request, bool $isUpdate): array
+    {
+        $rules = [
+            'nama' => 'required|string|max:100',
+            'id_kategori' => 'required|exists:kategori,id_kategori',
+            'sub_kategori' => 'required|array|min:1',
+            'sub_kategori.*' => 'exists:sub_kategori,id_sub_kategori',
+            'lokasi_penggunaan' => 'required|array|min:1',
+            'lokasi_penggunaan.*' => 'exists:lokasi_penggunaan,id_lokasi_penggunaan',
+            'kelebihan' => 'required|array|min:1',
+            'kelebihan.*' => 'exists:kebutuhan,id_kebutuhan',
+        ];
+
+        return $request->validate($rules);
+    }
+
+    private function syncProductRelations(Produk $produk, array $validated): void
+    {
+        $produk->subKategori()->sync($validated['sub_kategori']);
+        $produk->lokasiPenggunaan()->sync($validated['lokasi_penggunaan']);
+        $produk->kebutuhan()->sync($validated['kelebihan']);
     }
 }
