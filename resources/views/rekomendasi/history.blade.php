@@ -81,7 +81,6 @@
                   <th>Sub Kategori</th>
                   <th>Lokasi Penggunaan</th>
                   <th>Kebutuhan</th>
-                  <th>Waktu Input</th>
                   <th class="text-center">Aksi</th>
                 </tr>
               </thead>
@@ -93,7 +92,6 @@
                   <td>{{ $riwayat->sub_kategori }}</td>
                   <td>{{ $riwayat->lokasi_penggunaan }}</td>
                   <td>{{ $riwayat->kelebihan }}</td>
-                  <td>{{ optional($riwayat->created_at)->format('d-m-Y H:i:s') ?? '-' }}</td>
                   <td class="text-center">
                     <a href="{{ route('rekomendasi.history.show', $riwayat->id_input) }}" class="btn btn-riwayat-hasil btn-sm">
                       <i class="fas fa-eye"></i> Lihat Hasil

@@ -122,6 +122,24 @@
                 <li class="list-group-item">
                   <b>Email</b> <span class="float-right">{{ $user->email }}</span>
                 </li>
+                <li class="list-group-item">
+                  <b>No. Telepon</b> <span class="float-right">{{ $user->no_telp ?? '-' }}</span>
+                </li>
+                <li class="list-group-item">
+                  <b>Perusahaan / Instansi</b> <span class="float-right">{{ $user->perusahaan_instansi ?? '-' }}</span>
+                </li>
+                <li class="list-group-item">
+                  <b>Divisi / Jabatan</b> <span class="float-right">{{ $user->divisi_jabatan ?? '-' }}</span>
+                </li>
+                <li class="list-group-item">
+                  <b>Provinsi</b> <span class="float-right">{{ $user->provinsi ?? '-' }}</span>
+                </li>
+                <li class="list-group-item">
+                  <b>Kota / Kabupaten</b> <span class="float-right">{{ $user->kota_kabupaten ?? '-' }}</span>
+                </li>
+                <li class="list-group-item">
+                  <b>Lokasi Kota</b> <span class="float-right">{{ $user->lokasi_kota ?? '-' }}</span>
+                </li>
               </ul>
             </div>
           </div>
@@ -160,6 +178,69 @@
                   >
                 </div>
 
+                <div class="form-group">
+                  <label for="no_telp">No. Telepon / WhatsApp</label>
+                  <input
+                    type="text"
+                    id="no_telp"
+                    name="no_telp"
+                    class="form-control"
+                    value="{{ old('no_telp', $user->no_telp) }}"
+                    required
+                  >
+                </div>
+
+                <div class="form-group">
+                  <label for="perusahaan_instansi">Perusahaan / Instansi</label>
+                  <input
+                    type="text"
+                    id="perusahaan_instansi"
+                    name="perusahaan_instansi"
+                    class="form-control"
+                    value="{{ old('perusahaan_instansi', $user->perusahaan_instansi) }}"
+                  >
+                </div>
+
+                <div class="form-group">
+                  <label for="divisi_jabatan">Divisi / Jabatan</label>
+                  <input
+                    type="text"
+                    id="divisi_jabatan"
+                    name="divisi_jabatan"
+                    class="form-control"
+                    value="{{ old('divisi_jabatan', $user->divisi_jabatan) }}"
+                  >
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="provinsi">Provinsi</label>
+                      <input
+                        type="text"
+                        id="provinsi"
+                        name="provinsi"
+                        class="form-control"
+                        value="{{ old('provinsi', $user->provinsi) }}"
+                        required
+                      >
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="kota_kabupaten">Kota / Kabupaten</label>
+                      <input
+                        type="text"
+                        id="kota_kabupaten"
+                        name="kota_kabupaten"
+                        class="form-control"
+                        value="{{ old('kota_kabupaten', $user->kota_kabupaten) }}"
+                        required
+                      >
+                    </div>
+                  </div>
+                </div>
+
                 <div class="form-group mb-0">
                   <label>Email</label>
                   <input
@@ -171,7 +252,7 @@
                 </div>
                 <div class="text-center mt-3">
                   <button type="submit" class="btn profile-save-btn">
-                    <i class="fas fa-save mr-1"></i> Simpan Nama
+                    <i class="fas fa-save mr-1"></i> Simpan Data
                   </button>
                 </div>
               </form>

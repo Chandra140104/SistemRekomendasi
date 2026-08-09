@@ -61,7 +61,7 @@ class RekomendasiController extends Controller
     public function history()
     {
         $riwayatList = InputRekomendasi::where('id_user', Auth::id())
-            ->orderByDesc('created_at')
+            ->orderByDesc('id_input')
             ->paginate(10);
 
         return view('rekomendasi.history', compact('riwayatList'));
@@ -89,7 +89,7 @@ class RekomendasiController extends Controller
     private function getRiwayatList()
     {
         return InputRekomendasi::where('id_user', Auth::id())
-            ->orderByDesc('created_at')
+            ->orderByDesc('id_input')
             ->limit(1)
             ->get();
     }

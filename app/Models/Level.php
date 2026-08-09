@@ -9,7 +9,7 @@ class Level extends Model
     protected $table = 'level';
     protected $primaryKey = 'id_level';
 
-    public $timestamps = false; // karena di tabel tidak ada created_at & updated_at
+    public $timestamps = false; // karena tabel tidak menggunakan timestamp
 
     protected $fillable = [
         'kode',

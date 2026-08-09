@@ -5,6 +5,7 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\File;
 
 class CustomResetPasswordNotification extends Notification
 {
@@ -28,13 +29,22 @@ class CustomResetPasswordNotification extends Notification
         ]);
 
         $expireMinutes = config('auth.passwords.' . config('auth.defaults.passwords') . '.expire');
+        $logoPath = public_path('images/Logo/Primary-Logo-12-2048x615.png');
+        $logoDataUri = null;
+
+        if (File::exists($logoPath)) {
+            $logoMime = File::mimeType($logoPath) ?: 'image/png';
+            $logoBase64 = base64_encode(File::get($logoPath));
+            $logoDataUri = "data:{$logoMime};base64,{$logoBase64}";
+        }
 
         return (new MailMessage)
             ->subject('Reset Password Sistem Rekomendasi Cat')
-            ->greeting('Halo,')
-            ->line('Kami menerima permintaan untuk mengatur ulang password akun Anda.')
-            ->action('Reset Password', $resetUrl)
-            ->line("Link reset password ini berlaku selama {$expireMinutes} menit.")
-            ->line('Jika Anda tidak merasa meminta reset password, abaikan email ini.');
+            ->view('emails.reset-password', [
+                'resetUrl' => $resetUrl,
+                'expireMinutes' => $expireMinutes,
+                'logoDataUri' => $logoDataUri,
+                'recipientName' => $notifiable->name,
+            ]);
     }
 }

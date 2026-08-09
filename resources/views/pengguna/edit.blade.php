@@ -49,6 +49,53 @@
                        value="{{ $user->email }}" required>
               </div>
 
+              <div class="form-group">
+                <label>No. Telepon / WhatsApp</label>
+                <input type="text" name="no_telp" class="form-control"
+                       value="{{ $user->no_telp }}" required>
+              </div>
+
+              <div class="form-group">
+                <label>Perusahaan / Instansi</label>
+                <input type="text" name="perusahaan_instansi" class="form-control"
+                       value="{{ $user->perusahaan_instansi }}">
+              </div>
+
+              <div class="form-group">
+                <label>Divisi / Jabatan</label>
+                <input type="text" name="divisi_jabatan" class="form-control"
+                       value="{{ $user->divisi_jabatan }}">
+              </div>
+
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Provinsi</label>
+                    <input type="text" name="provinsi" class="form-control"
+                           value="{{ $user->provinsi }}" required>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Kota / Kabupaten</label>
+                    <input type="text" name="kota_kabupaten" class="form-control"
+                           value="{{ $user->kota_kabupaten }}" required>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Lokasi Kota</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  value="{{ $user->lokasi_kota }}"
+                  placeholder="Akan terbentuk otomatis dari Provinsi dan Kota / Kabupaten"
+                  readonly>
+                <small class="text-muted">Field ini tersimpan otomatis ke kolom <code>lokasi_kota</code>.</small>
+              </div>
+
               <!-- PASSWORD -->
               <div class="form-group">
                 <label>Password</label>

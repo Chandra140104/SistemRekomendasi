@@ -27,17 +27,28 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|max:100',
             'email' => 'required|email|unique:users,email',
+            'no_telp' => 'required|string|max:30',
+            'perusahaan_instansi' => 'nullable|string|max:100',
+            'divisi_jabatan' => 'nullable|string|max:100',
+            'provinsi' => 'required|string|max:100',
+            'kota_kabupaten' => 'required|string|max:100',
             'password' => 'required',
             'id_level' => 'required|exists:level,id_level'
         ]);
 
         // SIMPAN (password auto hash dari model)
-        User::create($request->only([
-            'name',
-            'email',
-            'password',
-            'id_level'
-        ]));
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'no_telp' => $request->no_telp,
+            'perusahaan_instansi' => $request->perusahaan_instansi,
+            'divisi_jabatan' => $request->divisi_jabatan,
+            'provinsi' => $request->provinsi,
+            'kota_kabupaten' => $request->kota_kabupaten,
+            'lokasi_kota' => trim($request->provinsi . ', ' . $request->kota_kabupaten, ', '),
+            'password' => $request->password,
+            'id_level' => $request->id_level,
+        ]);
 
         return redirect()->route('user.index')
             ->with('success', 'User berhasil ditambahkan');
@@ -62,14 +73,25 @@ class UserController extends Controller
 
         $request->validate([
             'name' => 'required|max:100',
+            'no_telp' => 'required|string|max:30',
+            'perusahaan_instansi' => 'nullable|string|max:100',
+            'divisi_jabatan' => 'nullable|string|max:100',
+            'provinsi' => 'required|string|max:100',
+            'kota_kabupaten' => 'required|string|max:100',
         ]);
 
         $user->update([
             'name' => $request->name,
+            'no_telp' => $request->no_telp,
+            'perusahaan_instansi' => $request->perusahaan_instansi,
+            'divisi_jabatan' => $request->divisi_jabatan,
+            'provinsi' => $request->provinsi,
+            'kota_kabupaten' => $request->kota_kabupaten,
+            'lokasi_kota' => trim($request->provinsi . ', ' . $request->kota_kabupaten, ', '),
         ]);
 
         return redirect()->route('profile.index')
-            ->with('success', 'Nama berhasil diupdate');
+            ->with('success', 'Data profil berhasil diupdate');
     }
 
     public function edit($id)
@@ -87,12 +109,23 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|max:100',
             'email' => 'required|email|unique:users,email,' . $id . ',id_user',
+            'no_telp' => 'required|string|max:30',
+            'perusahaan_instansi' => 'nullable|string|max:100',
+            'divisi_jabatan' => 'nullable|string|max:100',
+            'provinsi' => 'required|string|max:100',
+            'kota_kabupaten' => 'required|string|max:100',
             'id_level' => 'required|exists:level,id_level'
         ]);
 
         $data = [
             'name' => $request->name,
             'email' => $request->email,
+            'no_telp' => $request->no_telp,
+            'perusahaan_instansi' => $request->perusahaan_instansi,
+            'divisi_jabatan' => $request->divisi_jabatan,
+            'provinsi' => $request->provinsi,
+            'kota_kabupaten' => $request->kota_kabupaten,
+            'lokasi_kota' => trim($request->provinsi . ', ' . $request->kota_kabupaten, ', '),
             'id_level' => $request->id_level
         ];
 

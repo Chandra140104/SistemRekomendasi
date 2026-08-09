@@ -421,11 +421,10 @@
     <table class="table table-bordered table-striped mb-0">
       <thead class="bg-light">
         <tr>
-          <th>Kategori</th>
-          <th>Sub Kategori</th>
-          <th>Lokasi</th>
-          <th>Kebutuhan</th>
-          <th>Waktu Input</th>
+          <th width="25%">Kategori</th>
+          <th width="25%">Sub Kategori</th>
+          <th width="25%">Lokasi</th>
+          <th width="25%">Kebutuhan</th>
         </tr>
       </thead>
       <tbody>
@@ -435,7 +434,6 @@
           <td>{{ $item->sub_kategori }}</td>
           <td>{{ $item->lokasi_penggunaan }}</td>
           <td>{{ $item->kelebihan }}</td>
-          <td>{{ optional($item->created_at)->format('d-m-Y H:i:s') ?? '-' }}</td>
         </tr>
         @endforeach
       </tbody>

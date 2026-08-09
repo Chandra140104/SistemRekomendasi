@@ -424,13 +424,6 @@
           </li>
         </ul>
 
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a href="{{ route('login') }}" class="nav-link">
-              <i class="fas fa-sign-in-alt mr-1"></i>Login
-            </a>
-          </li>
-        </ul>
       </div>
     </div>
   </nav>
@@ -477,18 +470,9 @@
           </div>
         </div>
 
-        <!-- REMEMBER ME + BUTTON -->
+        <!-- BUTTON -->
         <div class="row">
-          <div class="col-8">
-            <div class="icheck-primary">
-              <input type="checkbox" id="remember">
-              <label for="remember">
-                Remember Me
-              </label>
-            </div>
-          </div>
-
-          <div class="col-4">
+          <div class="col-12">
             <button type="submit" class="btn btn-primary btn-block">
               Sign In
             </button>
@@ -567,3 +551,6 @@ Swal.fire({
 
 </body>
 </html>
+
+
+

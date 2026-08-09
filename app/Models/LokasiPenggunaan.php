@@ -9,6 +9,8 @@ class LokasiPenggunaan extends Model
     protected $table = 'lokasi_penggunaan';
     protected $primaryKey = 'id_lokasi_penggunaan';
 
+    public $timestamps = false;
+
     protected $fillable = ['nama'];
 
     public function produk()

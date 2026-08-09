@@ -9,7 +9,7 @@ class InputRekomendasi extends Model
     protected $table = 'input_rekomendasi';
     protected $primaryKey = 'id_input';
 
-    public $timestamps = false; // ⬅️ PENTING (karena cuma pakai created_at)
+    public $timestamps = false;
 
     protected $fillable = [
         'id_user',
@@ -17,10 +17,5 @@ class InputRekomendasi extends Model
         'sub_kategori',
         'kelebihan',
         'lokasi_penggunaan',
-        'created_at', // ⬅️ TAMBAHKAN
-    ];
-
-    protected $casts = [
-        'created_at' => 'datetime', // ⬅️ BIAR BISA FORMAT
     ];
 }

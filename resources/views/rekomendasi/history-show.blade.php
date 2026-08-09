@@ -163,10 +163,6 @@
               <th>Kebutuhan</th>
               <td>{{ $riwayat->kelebihan }}</td>
             </tr>
-            <tr>
-              <th>Waktu Input</th>
-              <td>{{ optional($riwayat->created_at)->format('d-m-Y H:i:s') ?? '-' }}</td>
-            </tr>
           </table>
         </div>
       </div>

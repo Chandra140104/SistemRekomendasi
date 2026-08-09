@@ -9,6 +9,8 @@ class Kebutuhan extends Model
     protected $table = 'kebutuhan';
     protected $primaryKey = 'id_kebutuhan';
 
+    public $timestamps = false;
+
     protected $fillable = ['nama'];
 
     public function produk()

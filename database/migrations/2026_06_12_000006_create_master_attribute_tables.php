@@ -12,19 +12,16 @@ return new class extends Migration
         Schema::create('sub_kategori', function (Blueprint $table) {
             $table->id('id_sub_kategori');
             $table->string('nama', 100)->unique();
-            $table->timestamps();
         });
 
         Schema::create('lokasi_penggunaan', function (Blueprint $table) {
             $table->id('id_lokasi_penggunaan');
             $table->string('nama', 100)->unique();
-            $table->timestamps();
         });
 
         Schema::create('kebutuhan', function (Blueprint $table) {
             $table->id('id_kebutuhan');
             $table->string('nama', 100)->unique();
-            $table->timestamps();
         });
 
         Schema::create('produk_sub_kategori', function (Blueprint $table) {
@@ -57,8 +54,6 @@ return new class extends Migration
             foreach ($this->normalizeValues($produk->sub_kategori) as $nama) {
                 $subKategoriIds[$nama] ??= DB::table('sub_kategori')->insertGetId([
                     'nama' => $nama,
-                    'created_at' => now(),
-                    'updated_at' => now(),
                 ], 'id_sub_kategori');
 
                 DB::table('produk_sub_kategori')->insertOrIgnore([
@@ -70,8 +65,6 @@ return new class extends Migration
             foreach ($this->normalizeValues($produk->lokasi_penggunaan) as $nama) {
                 $lokasiIds[$nama] ??= DB::table('lokasi_penggunaan')->insertGetId([
                     'nama' => $nama,
-                    'created_at' => now(),
-                    'updated_at' => now(),
                 ], 'id_lokasi_penggunaan');
 
                 DB::table('produk_lokasi_penggunaan')->insertOrIgnore([
@@ -83,8 +76,6 @@ return new class extends Migration
             foreach ($this->normalizeValues($produk->kelebihan) as $nama) {
                 $kebutuhanIds[$nama] ??= DB::table('kebutuhan')->insertGetId([
                     'nama' => $nama,
-                    'created_at' => now(),
-                    'updated_at' => now(),
                 ], 'id_kebutuhan');
 
                 DB::table('produk_kebutuhan')->insertOrIgnore([
