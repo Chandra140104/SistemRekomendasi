@@ -145,7 +145,7 @@
       margin: 0 auto;
       max-width: 1280px;
       min-height: calc(100vh - 145px);
-      padding: 18px 56px 4px;
+      padding: 38px 56px 48px;
       width: 100%;
     }
 
@@ -263,7 +263,6 @@
       background: #1f3f6f;
       color: #ffffff;
       flex-shrink: 0;
-      margin-top: -38px;
     }
 
     .register-footer strong {
@@ -279,7 +278,7 @@
         gap: 34px;
         grid-template-columns: 1fr;
         min-height: auto;
-        padding: 20px 22px 4px;
+        padding: 20px 22px 48px;
       }
 
       .brand-panel {
@@ -340,7 +339,7 @@
             <a id="aboutDropdown" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">About</a>
             <div aria-labelledby="aboutDropdown" class="dropdown-menu border-0 shadow">
               <a href="{{ route('about') }}#penjelasan-sistem-rekomendasi" class="dropdown-item">Penjelasan sistem rekomendasi</a>
-              <a href="{{ route('about') }}#content-based-filtering" class="dropdown-item">Metode content-based filtering</a>
+
               <a href="{{ route('about') }}#alur-sistem" class="dropdown-item">Alur sistem</a>
             </div>
           </li>
@@ -375,7 +374,7 @@
           </div>
 
           <div class="card-body register-card-body">
-            <p class="register-box-msg">Daftar untuk mulai menggunakan sistem</p>
+
 
             <form action="{{ route('register.store') }}" method="POST">
               @csrf

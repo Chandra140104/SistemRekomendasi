@@ -299,7 +299,7 @@
             <a id="aboutDropdown" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle active">About</a>
             <div aria-labelledby="aboutDropdown" class="dropdown-menu border-0 shadow">
               <a href="{{ route('about') }}#penjelasan-sistem-rekomendasi" class="dropdown-item">Penjelasan sistem rekomendasi</a>
-              <a href="{{ route('about') }}#content-based-filtering" class="dropdown-item">Metode content-based filtering</a>
+
               <a href="{{ route('about') }}#alur-sistem" class="dropdown-item">Alur sistem</a>
             </div>
           </li>
@@ -328,7 +328,7 @@
 
         <p>Website ini merupakan platform berbasis web yang dirancang untuk membantu pengguna dalam menemukan produk cat yang sesuai dengan kebutuhan dan preferensi mereka. Di tengah banyaknya pilihan produk cat dengan berbagai kategori, fungsi, dan keunggulan, pengguna sering kali mengalami kesulitan dalam menentukan produk yang paling tepat. Oleh karena itu, website ini hadir sebagai solusi yang mampu memberikan rekomendasi produk secara lebih terarah dan efisien.</p>
 
-        <p id="content-based-filtering">Sistem yang dikembangkan dalam website ini menggunakan metode content-based filtering, yaitu sebuah pendekatan yang memberikan rekomendasi berdasarkan kesamaan karakteristik atau atribut dari suatu produk. Atribut yang digunakan meliputi kategori produk, sub kategori, lokasi penggunaan, serta kebutuhan dari masing-masing produk cat. Dengan memanfaatkan informasi tersebut, sistem akan menganalisis kebutuhan pengguna dan mencocokkannya dengan produk yang tersedia, sehingga menghasilkan rekomendasi yang relevan dan sesuai.</p>
+        <p>Sistem yang dikembangkan dalam website ini menggunakan metode content-based filtering, yaitu sebuah pendekatan yang memberikan rekomendasi berdasarkan kesamaan karakteristik atau atribut dari suatu produk. Atribut yang digunakan meliputi kategori produk, sub kategori, lokasi penggunaan, serta kebutuhan dari masing-masing produk cat. Dengan memanfaatkan informasi tersebut, sistem akan menganalisis kebutuhan pengguna dan mencocokkannya dengan produk yang tersedia, sehingga menghasilkan rekomendasi yang relevan dan sesuai.</p>
 
         <p>Selain itu, proses perhitungan kemiripan antar produk dilakukan menggunakan metode Dice Similarity Coefficient, yang memungkinkan sistem untuk menentukan tingkat kesesuaian antara input pengguna dengan data produk secara lebih akurat. Hasil dari perhitungan tersebut kemudian diurutkan sehingga pengguna dapat melihat produk dengan tingkat kecocokan tertinggi sebagai rekomendasi utama.</p>
 

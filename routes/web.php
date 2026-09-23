@@ -67,7 +67,7 @@ Route::get('/penjelasan-kategori-produk/', function () {
 })->name('penjelasan-kategori-produk');
 
 Route::get('/penjelasan-sub-kategori', function () {
-    return view('login.product');
+    return view('login.sub_product');
 })->name('penjelasan-sub-kategori');
 
 Route::get('/product', function () {

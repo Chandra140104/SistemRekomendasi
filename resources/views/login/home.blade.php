@@ -549,7 +549,7 @@
             <a id="aboutDropdown" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">About</a>
             <div aria-labelledby="aboutDropdown" class="dropdown-menu border-0 shadow">
               <a href="{{ route('about') }}#penjelasan-sistem-rekomendasi" class="dropdown-item">Penjelasan sistem rekomendasi</a>
-              <a href="{{ route('about') }}#content-based-filtering" class="dropdown-item">Metode content-based filtering</a>
+
               <a href="{{ route('about') }}#alur-sistem" class="dropdown-item">Alur sistem</a>
             </div>
           </li>
